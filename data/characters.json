@@ -1,0 +1,140 @@
+[
+  {
+    "name": "Amrod",
+    "player": "SonsOfFeanor",
+    "xp": 229,
+    "body": 2,
+    "mind": 0,
+    "spirit": 0
+  },
+  {
+    "name": "Caranthir",
+    "player": "SonsOfFeanor",
+    "xp": 306,
+    "body": 2,
+    "mind": 0,
+    "spirit": 1
+  },
+  {
+    "name": "Curufin",
+    "player": "SonsOfFeanor",
+    "xp": 286,
+    "body": 1,
+    "mind": 1,
+    "spirit": 1
+  },
+  {
+    "name": "Elendil",
+    "player": "Eru Ilúvatar",
+    "xp": 307,
+    "body": 1,
+    "mind": 3,
+    "spirit": 2
+  },
+  {
+    "name": "Fëanor",
+    "player": "SonsOfFeanor",
+    "xp": 407,
+    "body": 1,
+    "mind": 1,
+    "spirit": 2
+  },
+  {
+    "name": "Finrod Felagund",
+    "player": "Eru Il£vatar",
+    "xp": 144,
+    "body": 3,
+    "mind": 3,
+    "spirit": 0
+  },
+  {
+    "name": "Galadriel",
+    "player": "Eru Ilúvatar",
+    "xp": 118,
+    "body": -1,
+    "mind": 2,
+    "spirit": 2
+  },
+  {
+    "name": "Hellboy",
+    "player": "ComicSans",
+    "xp": 167,
+    "body": 0,
+    "mind": -1,
+    "spirit": 2
+  },
+  {
+    "name": "Jinx",
+    "player": "IPlayLOLInClass",
+    "xp": 50,
+    "body": -1,
+    "mind": 2,
+    "spirit": 2
+  },
+  {
+    "name": "Luke Skywalker",
+    "player": "Lucas Films",
+    "xp": 329,
+    "body": -1,
+    "mind": 0,
+    "spirit": -1
+  },
+  {
+    "name": "Maedhros",
+    "player": "SonsOfFeanor",
+    "xp": 348,
+    "body": 0,
+    "mind": -1,
+    "spirit": 2
+  },
+  {
+    "name": "Niënor Níniel",
+    "player": "Eru Ilúvatar",
+    "xp": 148,
+    "body": 3,
+    "mind": 0,
+    "spirit": 1
+  },
+  {
+    "name": "Percival Fredrickstein von Musel Klossowski de Rolo III",
+    "player": "Critter9",
+    "xp": 499,
+    "body": 1,
+    "mind": -1,
+    "spirit": 1
+  },
+  {
+    "name": "Túrin Turambar",
+    "player": "Eru Ilúvatar",
+    "xp": 292,
+    "body": 1,
+    "mind": 2,
+    "spirit": 2
+  },
+  {
+    "name": "Vi",
+    "player": "IPlayLOLInClass",
+    "xp": 844,
+    "body": 0,
+    "mind": 2,
+    "spirit": -1
+  },
+  {
+    "name": "Finrol",
+    "player": "eru",
+    "xp": 200,
+    "body": 1,
+    "mind": 1,
+    "spirit": 2,
+    "charClass": "adventurer"
+  },
+  {
+    "name": "A",
+    "player": "a",
+    "xp": 500,
+    "body": 1,
+    "mind": 3,
+    "spirit": 0,
+    "charClass": "paladin"
+  }
+]
