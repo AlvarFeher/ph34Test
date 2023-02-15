@@ -62,15 +62,18 @@ public class ConsoleUIManager {
 
     public StorageMenuOptions showStorageMenuOptions(){
         do{
-            System.out.println("Do you want to use your local or cloud data?\n" +
-                    "    1) Local data\n" +
-                    "2) Cloud data");
+            System.out.println("""
+                    Do you want to use your local or cloud data?
+                        1) Local data
+                        2) Cloud data""");
             System.out.print(ENTER_OPTION);
             try{
                 int option = Integer.parseInt(scanner.nextLine());
                 switch(option){
                     case 1: return StorageMenuOptions.LOCAL;
                     case 2: return StorageMenuOptions.CLOUD;
+                    default:
+                        System.out.println(MessageView.OUT_OF_INTERVAL_BOUND);
                 }
             }catch (NumberFormatException e){
                 System.out.println(MessageView.INTEGER_EXCEPTION);
