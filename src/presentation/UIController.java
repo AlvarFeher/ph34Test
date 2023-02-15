@@ -37,9 +37,6 @@ public class UIController {
     public void startProgram() throws IOException {
         consoleUI.showLogo();
 
-        CharacterApiDAO a = new CharacterApiDAO();
-        a.getCharacters();
-
         // todo: add persistence.API data option
         switch (consoleUI.showStorageMenuOptions()){
             case CLOUD -> isLocal = false; // this is probably a bad practice
