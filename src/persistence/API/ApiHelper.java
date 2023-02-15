@@ -1,4 +1,4 @@
-package persistence;
+package persistence.API;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -14,8 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
 /**
- * Helper class with the responsibility of reading and posting Strings to an HTTPS API. Due to a misconfiguration
- * in the SimpleRPG API, it's set up to ignore SSL certificates, connecting to any server.
+ * Helper class with the responsibility of reading and posting Strings to an HTTPS persistence.API. Due to a misconfiguration
+ * in the SimpleRPG persistence.API, it's set up to ignore SSL certificates, connecting to any server.
  * Be aware that this should NOT be used in real production environments, as verifying certificates is a
  * key part of ensuring security in the context of Internet communications
  */
@@ -80,7 +80,7 @@ public final class ApiHelper {
             // In this case, we have to use the .POST() and .headers() methods to define what we want (to send a string containing JSON data)
             HttpRequest request = HttpRequest.newBuilder().uri(new URI(url)).headers("Content-Type", "application/json").POST(HttpRequest.BodyPublishers.ofString(body)).build();
 
-            // We could use a BodyHandler that discards the response body, but here we return the API's response
+            // We could use a BodyHandler that discards the response body, but here we return the persistence.API's response
             // Note we could also send the request asynchronously, but things would escalate in terms of coding complexity
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             return response.body();

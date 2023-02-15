@@ -22,7 +22,7 @@ public class AdventureDAO implements AdventureJsonDAO{
 
     private static final String path = "data/adventures.json";
 
-    // API DAO FOR ADVENTURE
+    // persistence.API DAO FOR ADVENTURE
 
     
 

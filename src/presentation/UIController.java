@@ -35,7 +35,7 @@ public class UIController {
     public void startProgram() {
         consoleUI.showLogo();
 
-        // todo: add API data option
+        // todo: add persistence.API data option
         switch (consoleUI.showStorageMenuOptions()){
             case CLOUD -> isLocal = false; // this is probably a bad practice
             case LOCAL -> isLocal = true;
