@@ -4,7 +4,9 @@ package presentation;
 import business.*;
 import business.entities.*;
 import business.entities.Character;
+import persistence.API.CharacterApiDAO;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -32,8 +34,11 @@ public class UIController {
     /**
      * shows the logo as the program starts, and runs the rest of the program
      */
-    public void startProgram() {
+    public void startProgram() throws IOException {
         consoleUI.showLogo();
+
+        CharacterApiDAO a = new CharacterApiDAO();
+        a.getCharacters();
 
         // todo: add persistence.API data option
         switch (consoleUI.showStorageMenuOptions()){
