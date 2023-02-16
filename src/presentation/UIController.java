@@ -4,8 +4,6 @@ package presentation;
 import business.*;
 import business.entities.*;
 import business.entities.Character;
-import persistence.API.CharacterApiDAO;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -42,6 +40,7 @@ public class UIController {
             case CLOUD -> isLocal = false; // this is probably a bad practice
             case LOCAL -> isLocal = true;
         }
+        consoleUI.loadData();
 
         if (monsterManager.loadMonsters() == null) {
             consoleUI.showLoadingError(false);
@@ -55,7 +54,6 @@ public class UIController {
     /**
      * controls the main menu options
      */
-
     private void run() {
         int characterCount = characterManager.getCharacterCount();
 
