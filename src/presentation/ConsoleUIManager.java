@@ -44,20 +44,29 @@ public class ConsoleUIManager {
                     """;
     private static final String ENTER_OPTION = "Your answer: ";
 
-    private static final String WELCOME_LOAD =
+    private static final String ENTER_ANSWER = "-> Answer: ";
+
+    private static final String WELCOME =
             """
             Welcome to Simple LSRPG.
             
-            Loading data...
             """;
 
+    private static final String LOAD = "Loading data...";
 
     /**
      * shows the logo of the game
      */
     public void showLogo() {
         System.out.println(LogoView.LOGO);
-        System.out.print(WELCOME_LOAD);
+        System.out.print(WELCOME);
+    }
+
+    /**
+     * print data loading
+     */
+    public void loadData() {
+        System.out.println(LOAD);
     }
 
     public StorageMenuOptions showStorageMenuOptions(){
@@ -65,8 +74,9 @@ public class ConsoleUIManager {
             System.out.println("""
                     Do you want to use your local or cloud data?
                         1) Local data
-                        2) Cloud data""");
-            System.out.print(ENTER_OPTION);
+                        2) Cloud data
+                        """);
+            System.out.print(ENTER_ANSWER);
             try{
                 int option = Integer.parseInt(scanner.nextLine());
                 switch(option){
@@ -935,5 +945,7 @@ public class ConsoleUIManager {
     public void showPartyCompleteAdventure(String currentAdventure) {
         System.out.println("\nCongratulations, your party completed \""+currentAdventure+"\"\n");
     }
+
+
 }
 

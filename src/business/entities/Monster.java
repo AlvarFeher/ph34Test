@@ -89,5 +89,16 @@ public class Monster{
         return Integer.parseInt(damageDice.split("d")[1]);
     }
 
-
+    @Override
+    public String toString() {
+        return "Monster{" +
+                "name='" + name + '\'' +
+                ", challenge='" + challenge + '\'' +
+                ", experience=" + experience +
+                ", hitPoints=" + hitPoints +
+                ", initiative=" + initiative +
+                ", damageDice='" + damageDice + '\'' +
+                ", damageType='" + damageType + '\'' +
+                '}';
+    }
 }

@@ -1,5 +1,3 @@
-import persistence.API.ApiHelper;
-import persistence.API.CharacterApiDAO;
 import presentation.UIController;
 
 import java.io.IOException;
