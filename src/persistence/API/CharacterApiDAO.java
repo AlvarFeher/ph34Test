@@ -1,5 +1,8 @@
 package persistence.API;
 
+import business.entities.Character;
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 public class CharacterApiDAO {
@@ -28,7 +31,7 @@ public class CharacterApiDAO {
 
     public String createCharacter(Character character) throws IOException {
         String url = "https://balandrau.salle.url.edu/dpoo/S1-Project_ICE42/characters";
-        String body = character.toString(); // convert to Json format
+        String body = new Gson().toJson(character); // convert to Json format
         return apiHelper.postToUrl(url,body);
     }
 
