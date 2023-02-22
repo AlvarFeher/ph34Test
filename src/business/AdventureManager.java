@@ -283,20 +283,36 @@ public class AdventureManager {
      * @param name name of the character
      * @return the attack action value of the character
      */
+
+
+    // TODO: add 'initial class' and switch,
     public int takeAttackActionCharacter(String currentAdventure, String name) {
+        int damage = 0;
         if ("adventurer".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            return (int)Math.floor(Math.random() * (6) + 1) + body;
+            damage = (int)Math.floor(Math.random() * (6) + 1) + body; // as before d10 + body
         }
         if ("warrior".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            return (int)Math.floor(Math.random() * (6) + 1) + body;
+            damage =  (int)Math.floor(Math.random() * (6) + 1) + body; // as before d10 + body
         }
         if ("champion".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            return (int)Math.floor(Math.random() * (6) + 1) + body;
+            damage = ((int)Math.floor(Math.random() * (6) + 1) + body) ; // as before d10 + body
         }
-        return Integer.MIN_VALUE;
+        if ("cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
+            damage = ((int)Math.floor(Math.random() * (4) + 1) + spirit) ; // d4 + spirit
+        }
+        if ("paladin".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
+            damage = ((int)Math.floor(Math.random() * (8) + 1) + spirit) ; // d8 + spirit
+        }
+        if ("wizard".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
+            damage = ((int)Math.floor(Math.random() * (4) + 1) + spirit) ; // d4 + spirit
+        }
+        return damage;
     }
 
 

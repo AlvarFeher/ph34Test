@@ -344,6 +344,32 @@ public class AdventureDAO implements AdventureJsonDAO{
         return null;
     }
 
+    public int getCharactersSpiritByName(String currentAdventure, String name) {
+        JsonReader reader = null;
+        List<Adventure> list;
+        try {
+            reader = new JsonReader(new FileReader(path));
+            list = new Gson().fromJson(reader, new TypeToken<List<Adventure>>() {}.getType());
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+        } catch (FileNotFoundException e) {
+            return Integer.MIN_VALUE;
+        }
+        for (Adventure adventure : list) {
+            if (Objects.equals(adventure.getName(), currentAdventure)) {
+                for (int j = 0; j < adventure.getParties().size(); j++) {
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter().getSpirit();
+                    }
+                }
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+
+
     /**
      * get the character body in an adventure
      * @param currentAdventure name of the adventure
@@ -368,6 +394,31 @@ public class AdventureDAO implements AdventureJsonDAO{
                 for (int j = 0; j < adventure.getParties().size(); j++) {
                     if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
                         return adventure.getParties().get(j).getCharacter().getBody();
+                    }
+                }
+            }
+        }
+        return Integer.MIN_VALUE;
+    }
+
+
+    public int getCharactersXpByName(String currentAdventure, String name) {
+        JsonReader reader = null;
+        List<Adventure> list;
+        try {
+            reader = new JsonReader(new FileReader(path));
+            list = new Gson().fromJson(reader, new TypeToken<List<Adventure>>() {}.getType());
+            if (list == null) {
+                list = new ArrayList<>();
+            }
+        } catch (FileNotFoundException e) {
+            return Integer.MIN_VALUE;
+        }
+        for (Adventure adventure : list) {
+            if (Objects.equals(adventure.getName(), currentAdventure)) {
+                for (int j = 0; j < adventure.getParties().size(); j++) {
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter().getXp();
                     }
                 }
             }

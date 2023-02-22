@@ -169,4 +169,8 @@ public interface AdventureJsonDAO {
      * @return true if the character is unconscious
      */
     boolean isPartyUnconsciousByPosition(String currentAdventure, int party_pos);
+
+    int getCharactersSpiritByName(String currentAdventure, String name);
+
+    int getCharactersXpByName(String currentAdventure, String name);
 }

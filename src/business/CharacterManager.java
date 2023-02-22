@@ -236,6 +236,16 @@ public class CharacterManager {
         return characterJsonDAO.getCharactersByIndexes(parties_inx);
     }
 
+    public String getInitialClass(String currentClass){
+        if(currentClass.equals("adventurer") || currentClass.equals("warrior") || currentClass.equals("champion")){
+            return "adventurer"; 
+        } else if (currentClass.equals("cleric") || currentClass.equals("paladin")) {
+            return "cleric";
+        }else{
+            return "wizard";
+        }
+    }
+
     /**
      * get the hit points of each of the characters in the party
      * @param parties_inx an array containing all the positions of characters in the data set
@@ -245,7 +255,10 @@ public class CharacterManager {
         List<Integer> hp = new ArrayList<>();
         for (int partiesInx : parties_inx) {
             Character character = getAll().get(partiesInx);
-            hp.add((10 + character.getBody()) * xpToLevel(character.getXp()));
+            if(Objects.equals(character.getCharClass(), "Warrior")){
+                hp.add(((10 + character.getBody()) * xpToLevel(character.getXp()))+character.getBody()*xpToLevel(character.getXp()));
+            }else
+                hp.add((10 + character.getBody()) * xpToLevel(character.getXp()));
         }
         return hp;
     }

@@ -4,6 +4,8 @@ package presentation;
 import business.*;
 import business.entities.*;
 import business.entities.Character;
+import persistence.API.CharacterApiDAO;
+
 import java.io.IOException;
 import java.util.*;
 
