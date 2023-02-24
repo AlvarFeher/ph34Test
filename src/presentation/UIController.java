@@ -115,7 +115,7 @@ public class UIController {
         if (index != 0) {
             Character character = characterManager.getCharacterByindex(name, index);
             int level = characterManager.xpToLevel(character.getXp());
-            String character_to_delete = consoleUI.showFullCharacterInfo(character.getName(), character.getPlayer(), level, character.getXp(), character.getBody(), character.getMind(), character.getSpirit());
+            String character_to_delete = consoleUI.showFullCharacterInfo(character.getName(), character.getPlayer(), level, character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
             if (!character_to_delete.isEmpty()) {
                 characterManager.deleteCharacter(character_to_delete);
                 consoleUI.showCharacterDeletionStatus(character_to_delete);

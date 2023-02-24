@@ -357,11 +357,11 @@ public class ConsoleUIManager {
      * @param spirit character's spirit
      * @return the name of the character to delete
      */
-    public String showFullCharacterInfo(String name, String player, int level, int xp, int body, int mind, int spirit) {
+    public String showFullCharacterInfo(String name, String player, int level, int xp, int body, int mind, int spirit, String char_class) {
         System.out.println("\nTavern keeper: \"Hey "+name+" get here; the boss wants to see you!\"\n");
         System.out.println("* Name:   " + name +
                 "\n* Player: " + player +
-                "\n* Class:  Adventurer" +
+                "\n* Class:  " + char_class +
                 "\n* Level:  " + level +
                 "\n* XP:  " + xp +
                 "\n* Body:   " + statToString(body) +
