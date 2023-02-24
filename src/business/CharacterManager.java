@@ -255,7 +255,7 @@ public class CharacterManager {
         List<Integer> hp = new ArrayList<>();
         for (int partiesInx : parties_inx) {
             Character character = getAll().get(partiesInx);
-            if(Objects.equals(character.getCharClass(), "Warrior")){
+            if(Objects.equals(character.getCharClass(), "Champion")){
                 hp.add(((10 + character.getBody()) * xpToLevel(character.getXp()))+character.getBody()*xpToLevel(character.getXp()));
             }else
                 hp.add((10 + character.getBody()) * xpToLevel(character.getXp()));
