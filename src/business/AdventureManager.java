@@ -1,9 +1,9 @@
 package business;
 
-import business.entities.Adventure;
+import business.entities.*;
 import business.entities.Character;
-import business.entities.Monster;
-import business.entities.Party;
+import business.entities.Classes.Cleric;
+import business.entities.Classes.Paladin;
 import persistence.AdventureDAO;
 import persistence.AdventureJsonDAO;
 
@@ -285,20 +285,20 @@ public class AdventureManager {
      */
 
 
-    // TODO: add 'initial class' and switch,
-    public int takeAttackActionCharacter(String currentAdventure, String name) {
+    // TODO: should we do that with instanceof ????
+    public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters) {
         int damage = 0;
         if ("adventurer".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage = (int)Math.floor(Math.random() * (6) + 1) + body; // as before d10 + body
+            damage =  characterManager.swordSlash(body); // as before d6 + body
         }
         if ("warrior".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage =  (int)Math.floor(Math.random() * (6) + 1) + body; // as before d10 + body
+            damage =  characterManager.improvedSwordSlash(body); // as before d10 + body
         }
         if ("champion".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage = ((int)Math.floor(Math.random() * (6) + 1) + body) ; // as before d10 + body
+            damage =  characterManager.improvedSwordSlash(body); // as before d10 + body
         }
         if ("cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
@@ -308,14 +308,70 @@ public class AdventureManager {
             int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
             damage = ((int)Math.floor(Math.random() * (8) + 1) + spirit) ; // d8 + spirit
         }
-        if ("wizard".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
-            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
-            damage = ((int)Math.floor(Math.random() * (4) + 1) + spirit) ; // d4 + spirit
+        if ("wizard".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name)) ) {
+            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
+            if(currentAliveMonsters < 3){
+                damage = ((int)Math.floor(Math.random() * (4) + 1) + mind) ; // d4 + mind
+            }else{
+                damage = ((int)Math.floor(Math.random() * (6) + 1) + mind) ; // d6 + mind
+            }
+
         }
         return damage;
     }
 
 
+    /**
+     * check if any member from the party has its hp lower than the initial half
+     * @param currentAdventure current adventure
+     * @return boolean
+     */
+
+    // FIXME: add maximum hit points attribute to Party class
+    public boolean checkPartyHalfHp(String currentAdventure){
+        for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
+            if(c.getHitPoint() < c.getHitPoint()/2){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check if anyone in the party needs healing
+     * @return
+     */
+    // FIXME: add maximum hit points attribute to Party class
+    public boolean checkHealingNeeded(String currentAdventure){
+        for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
+            if(c.getHitPoint() < c.getHitPoint()/2){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean characterIsCleric(String currentAdventure, String characterName){
+        for (Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
+            if(Objects.equals(c.getCharacter().getName(), characterName)){
+                if(c.getCharacter() instanceof Cleric){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean characterIsPaladin(String currentAdventure, String characterName){
+        for (Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
+            if(Objects.equals(c.getCharacter().getName(), characterName)){
+                if(c.getCharacter() instanceof Paladin){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * gets the attack action value of a monster
@@ -326,6 +382,7 @@ public class AdventureManager {
      */
     public int  takeAttackActionMonster(String currentAdventure, int encounter_pos, String name) {
         int max = adventureJsonDAO.getDamageDiceByName(currentAdventure, encounter_pos, name);
+        // aqui meter el damage dependiendo de que monster sea
         return (int)Math.floor(Math.random() * (max) + 1);
     }
 
@@ -345,7 +402,7 @@ public class AdventureManager {
      * @param encounter_pos encounter position
      * @return true if all the monsters in an encounter are dead or if all the party is unconscious, false otherwise
      */
-    public boolean isCombatantEnd(String currentAdventure, int encounter_pos) {
+    public boolean isCombatEnd(String currentAdventure, int encounter_pos) {
         return adventureJsonDAO.areMonstersAllDead(currentAdventure, encounter_pos) || adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
     }
 
@@ -360,13 +417,13 @@ public class AdventureManager {
     }
 
     /**
-     * the monster whose turn to attack applies its damage dice on an unconscious party
+     * the monster whose turn to attack applies its damage dice on a non-unconscious party
      * @param damage damage value
      * @param current_adventure name of the adventure
      * @param parties_inx the parties index
      * @return the name of the character being attacked
      */
-    public String applyDamageOnRandomUnconsciousnessParty(int damage, String current_adventure, int[] parties_inx) {
+    public String applyDamageOnRandomConsciousParty(int damage, String current_adventure, int[] parties_inx) {
         if (adventureJsonDAO.arePartyAllUnconscious(current_adventure)) {
             return null;
         }
@@ -445,6 +502,9 @@ public class AdventureManager {
         String s = "";
         int monster_pos = (int)Math.floor(Math.random() * (monsters.size()));
 
+        int[] aliveMonsters;
+
+
         boolean dead = false;
         for (int i=0;i<monsters.size();i++) {
             String damage_dice = "d" + monsters.get(i).getDamageDice();
@@ -510,6 +570,23 @@ public class AdventureManager {
             healing_arr[i] = mindByName + rand;
         }
         return healing_arr;
+    }
+
+    /**
+     * apply healing depending on class during combat phase
+     * @return
+     */
+
+    public int takeHealingActionCharacterCombat(String currentAdventure, String name){
+        int healing =0;
+        if ("Cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
+            healing = characterManager.prayerOfHealing(mind);
+        } else if ("Paladin".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
+            healing = characterManager.prayerOfMassHealing(mind);
+        }
+        return healing;
     }
 
     /**
@@ -609,4 +686,10 @@ public class AdventureManager {
         adventureJsonDAO.update(new_adventure);
         return list;
     }
+
+    // TODO: function that returns current alive monsters in encounter
+    public int currentAliveMonsters(){
+        return 3;
+    }
+
 }

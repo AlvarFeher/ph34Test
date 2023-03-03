@@ -255,11 +255,44 @@ public class CharacterManager {
         List<Integer> hp = new ArrayList<>();
         for (int partiesInx : parties_inx) {
             Character character = getAll().get(partiesInx);
-            if(Objects.equals(character.getCharClass(), "Champion")){
+            if(Objects.equals(character.getCharClass(), "Warrior")){
                 hp.add(((10 + character.getBody()) * xpToLevel(character.getXp()))+character.getBody()*xpToLevel(character.getXp()));
             }else
                 hp.add((10 + character.getBody()) * xpToLevel(character.getXp()));
         }
         return hp;
     }
+
+    public int fireballAttack(int mind){
+        return (int)Math.floor(Math.random() * (4) + 1) + mind;
+    }
+
+    public int swordSlash(int body){
+        return (int)Math.floor(Math.random() * (6) + 1) + body;
+    }
+
+    public int improvedSwordSlash(int body){
+        return (int)Math.floor(Math.random() * (10) + 1) + body;
+    }
+
+    public void notOnMyWatch(){
+
+    }
+
+    public void neverOnMyWatch(){
+
+    }
+
+    public int prayerOfHealing(int mind){
+        return (int)Math.floor(Math.random() * (10) + 1) + mind;
+    }
+
+    public int prayerOfMassHealing(int mind){
+        return (int)Math.floor(Math.random() * (10) + 1) + mind;
+    }
+
+    public int arcaneMissile(int mind){
+        return (int)Math.floor(Math.random() * (4) + 1) + mind;
+    }
+
 }

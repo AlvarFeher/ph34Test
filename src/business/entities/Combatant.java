@@ -6,6 +6,7 @@ package business.entities;
 public class Combatant {
     private String name;
     private int initValue;
+    private boolean isAlive;
 
     /**
      * constructor
@@ -15,6 +16,14 @@ public class Combatant {
     public Combatant(String name, int initValue) {
         this.name = name;
         this.initValue = initValue;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
     }
 
     /**

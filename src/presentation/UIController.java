@@ -4,7 +4,6 @@ package presentation;
 import business.*;
 import business.entities.*;
 import business.entities.Character;
-import persistence.API.CharacterApiDAO;
 
 import java.io.IOException;
 import java.util.*;
@@ -257,18 +256,20 @@ public class UIController {
             consoleUI.showCurrentParty(characterManager.getPartyNames(parties_inx), characterNum, characterNum);
             consoleUI.showEndOfFillingPartyInAdventure(currentAdventure);
 
-
             //get max hit points
             List<Integer> max_hit_points = characterManager.getMaxHitPointsByindex(parties_inx);
 
             adventureManager.updateParty(currentAdventure, parties_inx);
+
+            // FIXME: check down from here *********************
+
             for (int i = 0; i < adventureManager.getNumOfEncountersByName(currentAdventure); i++) {
                 consoleUI.showEncounterMsg(i);
                 List<String> monsters = adventureManager.getMonsterNamesInEncounter(i, currentAdventure);
                 for (String monster : monsters) {
                     consoleUI.showMonsterInEncounter(monster, adventureManager.occurrenceMonsterInEncounter(i, currentAdventure, monster));
                 }
-                //consoleUI.showMonstersInEncounter(monsters);
+
                 //preparation_stage
 
                 consoleUI.printPreparationStageTitle();
@@ -312,28 +313,40 @@ public class UIController {
     private void combatStage(int encounter_pos, int[] parties_inx, String currentAdventure, List<Integer> max_hit_points, List<Combatant> combatants) {
         consoleUI.startCombatStage();
         List<String> combatants_name = combatantManager.getNames(combatants);
+
+        int[] deadCombatants = new int[combatants_name.size()]; // track which combatants are alive or dead: 0 = alive ; 1 = dead
         int round = 0;
-        while(!adventureManager.isCombatantEnd(currentAdventure, encounter_pos)) {
+
+        while(!adventureManager.isCombatEnd(currentAdventure, encounter_pos)) {
             consoleUI.showRoundCombatStage(round, characterManager.getPartyNames(parties_inx), adventureManager.getHitPointsByindex(currentAdventure), max_hit_points);
 
-            for (String s : combatants_name) {
+            for (Combatant c : combatants) {
                 int damage;
+                int heal;
                 int rollDiced = adventureManager.isItAHit();
-                if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, s)) {
-                    if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, s)) {
-                        damage = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, s);
-                        String party = adventureManager.applyDamageOnRandomUnconsciousnessParty(damage * rollDiced, currentAdventure, parties_inx);
+                if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, c.getName())) {
+                    if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, c.getName())) {
+                        damage = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
+                        String party = adventureManager.applyDamageOnRandomConsciousParty(damage * rollDiced, currentAdventure, parties_inx);
                         if (party == null) {
                             return;
                         }
-                        consoleUI.showAttackAction(0, s, party, rollDiced, damage * rollDiced);
+                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, damage * rollDiced);
                     }
                 }
                 else {
-                    if (adventureManager.isPartyAlive(currentAdventure, s)) {
-                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, s);
+                    if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
+                        // check cleric stuff and if attack affects random enemy or all enemies, check if it is healing
+                        if(adventureManager.checkPartyHalfHp(currentAdventure) && adventureManager.characterIsCleric(currentAdventure,c.getName())){ // check if someone from the party has hp lower than half
+                            heal = adventureManager.takeHealingActionCharacterCombat(currentAdventure,c.getName());
+                        } else if (adventureManager.checkHealingNeeded(currentAdventure) && adventureManager.characterIsPaladin(currentAdventure,c.getName())) {
+                            heal = adventureManager.takeHealingActionCharacterCombat(currentAdventure,c.getName());
+                        }
+                        // apply healing depending on class-> paladin or cleric
+                        //FIXME: currentAliveMonsters is not done, function to get monsters currently alive
+                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters());
                         String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(damage * rollDiced, currentAdventure, encounter_pos);
-                        consoleUI.showAttackAction(1, s, monster, rollDiced, damage * rollDiced);
+                        consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, damage * rollDiced);
                     }
                 }
             }

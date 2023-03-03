@@ -1,5 +1,6 @@
 package business.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,4 +70,6 @@ public class Adventure {
     public List<Party> getParties() {
         return parties;
     }
+
+
 }

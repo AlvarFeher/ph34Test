@@ -6,6 +6,7 @@ package business.entities;
 public class Party {
     private Character character;
     private int hitPoint;
+    private int maxHitPoint; // initial hp value
 
     /**
      *
