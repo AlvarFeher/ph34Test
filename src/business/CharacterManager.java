@@ -3,7 +3,8 @@ package business;
 import business.entities.Character;
 import business.entities.Party;
 import persistence.CharacterDAO;
-import persistence.CharacterJsonDAO;
+
+import persistence.JSON.CharacterJsonDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Objects;
  */
 public class CharacterManager {
 
-    private final CharacterJsonDAO characterJsonDAO;
+    private final CharacterDAO characterJsonDAO;
 
     //todo: new character classes (adventurer, cleric, wizard)
     // classes evolve with level

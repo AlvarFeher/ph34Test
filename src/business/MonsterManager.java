@@ -1,7 +1,9 @@
 package business;
 
 import business.entities.Monster;
-import persistence.MonstersJsonDAO;
+import persistence.JSON.MonstersJsonDAO;
+import persistence.MonsterDAO;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.Objects;
 
 public class MonsterManager {
 
-    private final MonstersJsonDAO monsterJsonDAO;
+    private final MonsterDAO monsterJsonDAO;
 
     /**
      * constructor

@@ -4,7 +4,8 @@ import business.entities.*;
 import business.entities.Character;
 import business.entities.Classes.*;
 import persistence.AdventureDAO;
-import persistence.AdventureJsonDAO;
+import persistence.AdventureDAO;
+import persistence.JSON.AdventureJsonDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class AdventureManager {
 
     private final CharacterManager characterManager;
-    private final AdventureJsonDAO adventureJsonDAO;
+    private final AdventureDAO adventureJsonDAO;
 
     /**
      * constructor
