@@ -18,7 +18,13 @@ public class Paladin extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
-    private void attack(){
-
+    public int prayerOfMassHealing(int mind){
+        return (int)Math.floor(Math.random() * (10) + 1) + mind;
     }
+
+    public int  neverOnMyWatch(int spirit){
+        return (int)Math.floor(Math.random() * (8) + 1) + spirit;
+    }
+
+
 }

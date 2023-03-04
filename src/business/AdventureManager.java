@@ -2,8 +2,7 @@ package business;
 
 import business.entities.*;
 import business.entities.Character;
-import business.entities.Classes.Cleric;
-import business.entities.Classes.Paladin;
+import business.entities.Classes.*;
 import persistence.AdventureDAO;
 import persistence.AdventureJsonDAO;
 
@@ -24,7 +23,7 @@ public class AdventureManager {
      * constructor
      */
     public AdventureManager() {
-        adventureJsonDAO = new AdventureDAO();
+        adventureJsonDAO = new AdventureJsonDAO();
         characterManager = new CharacterManager();
     }
 
@@ -91,6 +90,16 @@ public class AdventureManager {
             }
         }
         return count;
+    }
+
+    public Party getPartyMemberByName(String currentAdventure, String partyName){
+        List<Party> parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        for(Party p: parties){
+            if(Objects.equals(p.getCharacter().getName(), partyName)){
+                return p;
+            }
+        }
+        return null;
     }
 
     /**
@@ -284,38 +293,35 @@ public class AdventureManager {
      * @return the attack action value of the character
      */
 
-
-    // TODO: should we do that with instanceof ????
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters) {
         int damage = 0;
-        if ("adventurer".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Adventurer) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage =  characterManager.swordSlash(body); // as before d6 + body
+            damage =  ((Adventurer) getPartyMemberByName(currentAdventure, name).getCharacter()).swordSlash(body);
         }
-        if ("warrior".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Warrior) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage =  characterManager.improvedSwordSlash(body); // as before d10 + body
+            damage = ((Warrior) getPartyMemberByName(currentAdventure, name).getCharacter()).improvedSwordSlash(body);
         }
-        if ("champion".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Champion) {
             int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage =  characterManager.improvedSwordSlash(body); // as before d10 + body
+            damage = ((Champion) getPartyMemberByName(currentAdventure, name).getCharacter()).improvedSwordSlash(body);
         }
-        if ("cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Cleric) {
             int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
-            damage = ((int)Math.floor(Math.random() * (4) + 1) + spirit) ; // d4 + spirit
+            damage = ((Cleric) getPartyMemberByName(currentAdventure, name).getCharacter()).notOnMyWatch(spirit);
         }
-        if ("paladin".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Paladin) {
             int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
-            damage = ((int)Math.floor(Math.random() * (8) + 1) + spirit) ; // d8 + spirit
+            damage = ((Paladin) getPartyMemberByName(currentAdventure, name).getCharacter()).neverOnMyWatch(spirit);
         }
-        if ("wizard".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name)) ) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Wizard ) {
             int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
             if(currentAliveMonsters < 3){
-                damage = ((int)Math.floor(Math.random() * (4) + 1) + mind) ; // d4 + mind
+                damage = ((Wizard) getPartyMemberByName(currentAdventure, name).getCharacter()).arcaneMissile(mind);
             }else{
-                damage = ((int)Math.floor(Math.random() * (6) + 1) + mind) ; // d6 + mind
+                damage = ((Wizard) getPartyMemberByName(currentAdventure, name).getCharacter()).fireballAttack(mind);
             }
-
         }
         return damage;
     }
@@ -581,10 +587,10 @@ public class AdventureManager {
         int healing =0;
         if ("Cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
-            healing = characterManager.prayerOfHealing(mind);
+            healing = ((Cleric) getPartyMemberByName(currentAdventure, name).getCharacter()).prayerOfHealing(mind);
         } else if ("Paladin".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
             int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
-            healing = characterManager.prayerOfMassHealing(mind);
+            healing = ((Paladin) getPartyMemberByName(currentAdventure, name).getCharacter()).neverOnMyWatch(mind);
         }
         return healing;
     }
@@ -687,9 +693,14 @@ public class AdventureManager {
         return list;
     }
 
-    // TODO: function that returns current alive monsters in encounter
-    public int currentAliveMonsters(){
-        return 3;
+    /**
+     * reeturns current number of monsters in an encounter of an adventure
+     * @param currentAdventure current adventure
+     * @param encounterIndex encounter index in the adventure
+     * @return amount of alive monsters, that number being the amount of existing monsters
+     */
+    public int currentAliveMonsters(String currentAdventure, int encounterIndex){
+        return getMonsterNamesInEncounter(encounterIndex,currentAdventure).size();
     }
 
 }

@@ -18,7 +18,12 @@ public class Cleric extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
-    private void attack(){
-
+    public int prayerOfHealing(int mind){
+        return (int)Math.floor(Math.random() * (10) + 1) + mind;
     }
+
+    public int notOnMyWatch(int spirit){
+        return (int)Math.floor(Math.random() * (4) + 1) + spirit;
+    }
+
 }

@@ -17,4 +17,8 @@ public class Warrior extends Character {
     public Warrior(String name, String player, int xp, int body, int mind, int spirit, String charClass) {
         super(name, player, xp, body, mind, spirit, charClass);
     }
+
+    public int improvedSwordSlash(int body){
+        return (int)Math.floor(Math.random() * (10) + 1) + body;
+    }
 }

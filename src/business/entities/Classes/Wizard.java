@@ -20,7 +20,11 @@ public class Wizard extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
-    private void attack(){
+    public int arcaneMissile(int mind){
+        return (int)Math.floor(Math.random() * (6) + 1) + mind;
+    }
 
+    public int fireballAttack(int mind){
+        return (int)Math.floor(Math.random() * (4) + 1) + mind;
     }
 }

@@ -343,8 +343,7 @@ public class UIController {
                             heal = adventureManager.takeHealingActionCharacterCombat(currentAdventure,c.getName());
                         }
                         // apply healing depending on class-> paladin or cleric
-                        //FIXME: currentAliveMonsters is not done, function to get monsters currently alive
-                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters());
+                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos));
                         String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(damage * rollDiced, currentAdventure, encounter_pos);
                         consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, damage * rollDiced);
                     }
