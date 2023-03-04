@@ -4,8 +4,9 @@ import business.entities.*;
 import business.entities.Character;
 import business.entities.Classes.Cleric;
 import business.entities.Classes.Paladin;
+import persistence.API.AdventureApiDAO;
+import persistence.JSON.AdventureJsonDAO;
 import persistence.AdventureDAO;
-import persistence.AdventureJsonDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +19,16 @@ import java.util.Objects;
 public class AdventureManager {
 
     private final CharacterManager characterManager;
-    private final AdventureJsonDAO adventureJsonDAO;
+    private final AdventureDAO adventureJsonDAO;
+    private final AdventureDAO adventureApiDAO;
 
     /**
      * constructor
      */
     public AdventureManager() {
-        adventureJsonDAO = new AdventureDAO();
+        adventureJsonDAO = new AdventureJsonDAO();
         characterManager = new CharacterManager();
+        adventureApiDAO = new AdventureApiDAO();
     }
 
     /**
@@ -155,6 +158,9 @@ public class AdventureManager {
         }
         Adventure adventure = new Adventure(adventure_name, encountering_num, list);
         adventureJsonDAO.add(adventure);
+
+        adventureApiDAO.add(adventure);
+
     }
 
     /**
