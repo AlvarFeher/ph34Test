@@ -3,13 +3,14 @@ package persistence.API;
 import business.entities.Monster;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import persistence.MonsterDAO;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MonsterApiDAO {
+public class MonsterApiDAO implements MonsterDAO {
 
     private ApiHelper apiHelper;
     private final String base_url = "https://balandrau.salle.url.edu/dpoo/shared/monsters";

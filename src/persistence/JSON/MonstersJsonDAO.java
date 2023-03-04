@@ -31,37 +31,6 @@ public class MonstersJsonDAO implements MonsterDAO {
     public MonstersJsonDAO() {
     }
 
-    /**
-     * add a monster in the dataset
-     * @param monster monster object
-     * @return if a monster is created
-     */
-    @Override
-    public int add(Monster monster) {
-        try {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            JsonReader reader = new JsonReader(new FileReader(path));
-            Type type = new TypeToken<List<Monster>>() {}.getType();
-            List<Monster> list = gson.fromJson(reader, type);
-            reader.close();
-            if (list != null) {
-                list.add(monster);
-            }
-            else {
-                list = new ArrayList<>();
-                list.add(monster);
-            }
-
-            FileWriter writer = new FileWriter(path);
-            writer.write(gson.toJson(list));
-            writer.close();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
 
     /**
      * get all the monsters in the dataset

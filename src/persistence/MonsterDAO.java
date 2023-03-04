@@ -10,13 +10,6 @@ import java.util.List;
 public interface MonsterDAO {
 
     /**
-     * add a monster in the dataset
-     * @param monster monster object
-     * @return if a monster is created
-     */
-    int add(Monster monster);
-
-    /**
      * get all the monsters in the dataset
      * @return a list of all the monsters
      */
