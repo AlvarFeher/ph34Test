@@ -158,7 +158,7 @@ public class AdventureManager {
         }
         Adventure adventure = new Adventure(adventure_name, encountering_num, list);
         adventureJsonDAO.add(adventure);
-
+        //FIXME: MAKE SURE TO CALL ONLY ONE OF THESE BASED ON IF IT IS LOCAL OR CLOUD (ADD A PARAMETER IN THE FUNCTION)
         adventureApiDAO.add(adventure);
 
     }

@@ -3,9 +3,12 @@ package persistence.API;
 import business.entities.Adventure;
 import business.entities.Party;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import persistence.AdventureDAO;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdventureApiDAO implements AdventureDAO {
@@ -13,6 +16,9 @@ public class AdventureApiDAO implements AdventureDAO {
     private ApiHelper apiHelper;
     private final String base_url = "https://balandrau.salle.url.edu/dpoo/S1-Project_ICE42/adventures";
 
+    /**
+     * Constructor initializing a new object of Api Helper
+     */
     public AdventureApiDAO() {
         try {
             apiHelper = new ApiHelper();
@@ -21,6 +27,11 @@ public class AdventureApiDAO implements AdventureDAO {
         }
     }
 
+    /**
+     * adds an adventure object to the database via a POST METHOD in the API
+     * @param adventure adventure object
+     * @return 0
+     */
     @Override
     public int add(Adventure adventure) {
         try {
@@ -32,14 +43,55 @@ public class AdventureApiDAO implements AdventureDAO {
         return 0;
     }
 
+    /**
+     * get all the adventures stored in the API server
+     * @return a list of all the adventures available
+     */
     @Override
     public List<Adventure> getAll() {
+        try {
+            String all = apiHelper.getFromUrl(base_url);
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Adventure>>() {}.getType();
+            return gson.fromJson(all, type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
+    /**
+     * get an adventure object whose name is str
+     * @param str name of the adventure
+     * @return adventure abject if exists, null otherwise
+     */
     @Override
     public Adventure getAdventureByName(String str) {
+        try {
+            String s = apiHelper.getFromUrl(base_url + "?name="+str);
+            Gson gson = new Gson();
+            Type type = new TypeToken<Adventure>() {}.getType();
+            return gson.fromJson(s , type);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
+    }
+
+    private void deleteAll() {
+        try {
+            apiHelper.deleteFromUrl(base_url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteByName(String current_adventure) {
+        try {
+            apiHelper.deleteFromUrl(base_url + "?name="+current_adventure);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
