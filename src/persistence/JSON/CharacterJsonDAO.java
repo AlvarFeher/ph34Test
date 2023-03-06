@@ -235,20 +235,20 @@ public class CharacterJsonDAO implements CharacterDAO {
         return Integer.MIN_VALUE;
     }
 
-    public Character assignClass(Character character){
-        switch(character.getCharClass()){
+    public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass){
+        switch(charClass){
             case "Adventurer":
-               return  new Adventurer(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+               return  new Adventurer(name, player, xp, body, mind, spirit, charClass);
             case "Warrior":
-               return  new Warrior(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+               return  new Warrior( name, player, xp, body, mind, spirit, charClass);
             case "Champion":
-                return  new Champion(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+                return  new Champion(name, player, xp, body, mind, spirit, charClass);
             case "Cleric":
-                return  new Cleric(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+                return  new Cleric(name, player, xp, body, mind, spirit, charClass);
             case "Paladin":
-                return  new Paladin(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+                return  new Paladin(name, player, xp, body, mind, spirit, charClass);
             case "Wizard":
-                return  new Wizard(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+                return  new Wizard(name, player, xp, body, mind, spirit, charClass);
         }
         return null;
     }

@@ -271,8 +271,8 @@ public class AdventureManager {
             Character character = adventure.getParties().get(i).getCharacter();
             int spirit = character.getSpirit() + 1;
 
-            Character new_character = new Character(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), spirit, character.getCharClass());
-            Party new_party = new Party(characterJsonDao.assignClass(new_character), adventure.getParties().get(i).getHitPoint());
+            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), spirit, character.getCharClass());
+            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint());
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
@@ -299,7 +299,8 @@ public class AdventureManager {
 
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters) {
         int damage = 0;
-        System.out.println(getPartyMemberByName(currentAdventure,name).getCharacter());
+
+
 
         return damage;
     }
@@ -631,7 +632,7 @@ public class AdventureManager {
             else {
                 list.add(characterManager.xpToLevel(xp));
             }
-            Character new_character = new Character(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
             Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint());
             parties.add(new_party);
         }
