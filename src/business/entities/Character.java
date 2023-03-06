@@ -1,9 +1,12 @@
 package business.entities;
 
+
+import com.google.gson.annotations.SerializedName;
+
 /**
  * character entity
  */
-public class Character {
+public abstract class Character {
 
     private String name;
     private String player;
@@ -11,6 +14,7 @@ public class Character {
     private int body;
     private int mind;
     private int spirit;
+    @SerializedName(value="charClass", alternate="class")
     private String charClass;
 
     /**
@@ -20,7 +24,7 @@ public class Character {
      * @param xp character's xp
      * @param body character's body statistics
      * @param mind character's mind statistics
-     * @param spirit character's spitit statistics
+     * @param spirit character's spirit statistics
      */
     public Character(String name, String player, int xp, int body, int mind, int spirit, String charClass) {
         this.name = name;
@@ -31,6 +35,10 @@ public class Character {
         this.spirit = spirit;
         this.charClass = charClass;
     }
+
+    public abstract int doAction();
+
+    public abstract int doAction(int param1);
 
     /**
      * name getter
@@ -87,5 +95,7 @@ public class Character {
     public String getCharClass() {
         return charClass;
     }
+
+
 }
 

@@ -18,6 +18,21 @@ public class Cleric extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
+    @Override
+    public int doAction() {
+        return 0;
+    }
+
+    @Override
+    public int doAction(int healingNeeded) {
+        if(healingNeeded == 1){
+            return prayerOfHealing(getMind());
+        } else {
+            return notOnMyWatch(getSpirit());
+        }
+    }
+
+
     public int prayerOfHealing(int mind){
         return (int)Math.floor(Math.random() * (10) + 1) + mind;
     }

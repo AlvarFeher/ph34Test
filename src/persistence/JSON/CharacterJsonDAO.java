@@ -1,6 +1,7 @@
 package persistence.JSON;
 
 import business.entities.Character;
+import business.entities.Classes.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -232,6 +233,24 @@ public class CharacterJsonDAO implements CharacterDAO {
             }
         }
         return Integer.MIN_VALUE;
+    }
+
+    public Character assignClass(Character character){
+        switch(character.getCharClass()){
+            case "Adventurer":
+               return  new Adventurer(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            case "Warrior":
+               return  new Warrior(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            case "Champion":
+                return  new Champion(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            case "Cleric":
+                return  new Cleric(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            case "Paladin":
+                return  new Paladin(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+            case "Wizard":
+                return  new Wizard(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+        }
+        return null;
     }
 
 }

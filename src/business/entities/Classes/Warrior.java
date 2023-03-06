@@ -18,7 +18,16 @@ public class Warrior extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
-    public int improvedSwordSlash(int body){
-        return (int)Math.floor(Math.random() * (10) + 1) + body;
+    @Override
+    public int doAction() {
+        return (int)Math.floor(Math.random() * (6) + 1) + getBody();
+    } // improved sword slash
+
+    @Override
+    public int doAction(int param1) {
+        return 0;
     }
+
+
+
 }

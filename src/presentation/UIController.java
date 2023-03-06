@@ -153,7 +153,6 @@ public class UIController {
                                 consoleUI.printMonsterInEncounter(j, monster, adventureManager.occurrenceMonsterInEncounter(i-1, adventure_name, monster));
                             }
                         }
-
                         switch (consoleUI.showMonstersMenu()) {
                             case ADD_MONSTER -> {
                                 addMonster(monsters, challenges, adventure_name, i);
@@ -170,9 +169,6 @@ public class UIController {
             }
         }
         run();
-
-
-
     }
 
     /**

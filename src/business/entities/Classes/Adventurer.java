@@ -18,7 +18,17 @@ public class Adventurer extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
-    public int swordSlash(int body){
-        return (int)Math.floor(Math.random() * (6) + 1) + body;
+    @Override
+    public int doAction() {
+        return (int)Math.floor(Math.random() * (6) + 1) + getBody();
+    } // sword slash
+
+    @Override
+    public int doAction(int param1) {
+        return 0;
     }
+
+
+
+
 }

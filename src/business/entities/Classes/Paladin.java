@@ -18,6 +18,19 @@ public class Paladin extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
+    @Override
+    public int doAction() {
+        return 0;
+    }
+
+    @Override
+    public int doAction(int healingNeeded) {
+        if(healingNeeded == 1){
+            return prayerOfMassHealing(getMind());
+        } else {
+            return neverOnMyWatch(getSpirit());
+        }
+    }
     public int prayerOfMassHealing(int mind){
         return (int)Math.floor(Math.random() * (10) + 1) + mind;
     }

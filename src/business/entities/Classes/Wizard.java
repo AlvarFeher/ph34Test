@@ -20,6 +20,24 @@ public class Wizard extends Character {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
+    @Override
+    public int doAction(int aliveMonsters, int mind) {
+        if(aliveMonsters < 3){
+            return arcaneMissile(mind);
+        }else
+            return fireballAttack(mind);
+    }
+
+    @Override
+    public int doAction(int param1, int param2, int param3) {
+        return 0;
+    }
+
+    @Override
+    public int doAction(int param1) {
+        return 0;
+    }
+
     public int arcaneMissile(int mind){
         return (int)Math.floor(Math.random() * (6) + 1) + mind;
     }

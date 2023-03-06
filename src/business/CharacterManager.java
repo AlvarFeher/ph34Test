@@ -1,6 +1,7 @@
 package business;
 
 import business.entities.Character;
+import business.entities.Classes.*;
 import business.entities.Party;
 import persistence.CharacterDAO;
 
@@ -116,8 +117,33 @@ public class CharacterManager {
      * @return if the character is created
      */
     public int createCharacter(String name, String player_name, int level, int body, int mind, int spirit, String initialClass) {
-        Character character = new Character(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-        return characterJsonDAO.add(character);
+        Character character;
+        switch(initialClass){
+            case "Adventurer":
+                character = new Adventurer(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+
+            case "Warrior":
+                character = new Warrior(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+
+            case "Champion":
+                character = new Champion(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+
+            case "Cleric":
+                character = new Cleric(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+
+            case "Paladin":
+                character = new Paladin(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+
+            case "Wizard":
+                character = new Wizard(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                return characterJsonDAO.add(character);
+        }
+       return 1;
     }
 
     /**

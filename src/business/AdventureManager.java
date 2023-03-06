@@ -6,6 +6,7 @@ import business.entities.Classes.*;
 import persistence.AdventureDAO;
 import persistence.AdventureDAO;
 import persistence.JSON.AdventureJsonDAO;
+import persistence.JSON.CharacterJsonDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class AdventureManager {
 
     private final CharacterManager characterManager;
     private final AdventureDAO adventureJsonDAO;
+    private final CharacterJsonDAO characterJsonDao;
 
     /**
      * constructor
@@ -26,6 +28,7 @@ public class AdventureManager {
     public AdventureManager() {
         adventureJsonDAO = new AdventureJsonDAO();
         characterManager = new CharacterManager();
+        characterJsonDao = new CharacterJsonDAO();
     }
 
     /**
@@ -267,12 +270,12 @@ public class AdventureManager {
         for (int i=0;i< parties_inx.length;i++) {
             Character character = adventure.getParties().get(i).getCharacter();
             int spirit = character.getSpirit() + 1;
+
             Character new_character = new Character(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), spirit, character.getCharClass());
-            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint());
+            Party new_party = new Party(characterJsonDao.assignClass(new_character), adventure.getParties().get(i).getHitPoint());
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-
         adventureJsonDAO.update(new_adventure);
     }
 
@@ -296,34 +299,8 @@ public class AdventureManager {
 
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters) {
         int damage = 0;
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Adventurer) {
-            int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage =  ((Adventurer) getPartyMemberByName(currentAdventure, name).getCharacter()).swordSlash(body);
-        }
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Warrior) {
-            int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage = ((Warrior) getPartyMemberByName(currentAdventure, name).getCharacter()).improvedSwordSlash(body);
-        }
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Champion) {
-            int body = adventureJsonDAO.getCharactersBodyByName(currentAdventure, name);
-            damage = ((Champion) getPartyMemberByName(currentAdventure, name).getCharacter()).improvedSwordSlash(body);
-        }
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Cleric) {
-            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
-            damage = ((Cleric) getPartyMemberByName(currentAdventure, name).getCharacter()).notOnMyWatch(spirit);
-        }
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Paladin) {
-            int spirit = adventureJsonDAO.getCharactersSpiritByName(currentAdventure, name);
-            damage = ((Paladin) getPartyMemberByName(currentAdventure, name).getCharacter()).neverOnMyWatch(spirit);
-        }
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Wizard ) {
-            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
-            if(currentAliveMonsters < 3){
-                damage = ((Wizard) getPartyMemberByName(currentAdventure, name).getCharacter()).arcaneMissile(mind);
-            }else{
-                damage = ((Wizard) getPartyMemberByName(currentAdventure, name).getCharacter()).fireballAttack(mind);
-            }
-        }
+        System.out.println(getPartyMemberByName(currentAdventure,name).getCharacter());
+
         return damage;
     }
 
@@ -586,10 +563,10 @@ public class AdventureManager {
 
     public int takeHealingActionCharacterCombat(String currentAdventure, String name){
         int healing =0;
-        if ("Cleric".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Cleric) {
             int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
             healing = ((Cleric) getPartyMemberByName(currentAdventure, name).getCharacter()).prayerOfHealing(mind);
-        } else if ("Paladin".equals(adventureJsonDAO.getCharacterClassByName(currentAdventure, name))) {
+        } else if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Paladin) {
             int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
             healing = ((Paladin) getPartyMemberByName(currentAdventure, name).getCharacter()).neverOnMyWatch(mind);
         }
