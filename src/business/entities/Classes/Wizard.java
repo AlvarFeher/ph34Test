@@ -21,22 +21,18 @@ public class Wizard extends Character {
     }
 
     @Override
-    public int doAction(int aliveMonsters, int mind) {
+    public int doAction(int param1, int aliveMonsters) {
         if(aliveMonsters < 3){
-            return arcaneMissile(mind);
+            return arcaneMissile(getMind());
         }else
-            return fireballAttack(mind);
+            return fireballAttack(getMind());
     }
 
     @Override
-    public int doAction(int param1, int param2, int param3) {
+    public int doAction() {
         return 0;
     }
 
-    @Override
-    public int doAction(int param1) {
-        return 0;
-    }
 
     public int arcaneMissile(int mind){
         return (int)Math.floor(Math.random() * (6) + 1) + mind;

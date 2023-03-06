@@ -332,14 +332,10 @@ public class UIController {
                 }
                 else {
                     if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
-                        // check cleric stuff and if attack affects random enemy or all enemies, check if it is healing
-                        if(adventureManager.checkPartyHalfHp(currentAdventure) && adventureManager.characterIsCleric(currentAdventure,c.getName())){ // check if someone from the party has hp lower than half
-                            heal = adventureManager.takeHealingActionCharacterCombat(currentAdventure,c.getName());
-                        } else if (adventureManager.checkHealingNeeded(currentAdventure) && adventureManager.characterIsPaladin(currentAdventure,c.getName())) {
-                            heal = adventureManager.takeHealingActionCharacterCombat(currentAdventure,c.getName());
-                        }
-                        // apply healing depending on class-> paladin or cleric
-                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos));
+
+                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
+
+                        // FIXME: must check how the 'damage' is applied in case of healing or wizard. Should change 'damage' to 'actionValue' or similar
                         String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(damage * rollDiced, currentAdventure, encounter_pos);
                         consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, damage * rollDiced);
                     }

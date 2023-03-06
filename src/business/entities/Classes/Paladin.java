@@ -24,7 +24,7 @@ public class Paladin extends Character {
     }
 
     @Override
-    public int doAction(int healingNeeded) {
+    public int doAction(int healingNeeded, int param2) {
         if(healingNeeded == 1){
             return prayerOfMassHealing(getMind());
         } else {

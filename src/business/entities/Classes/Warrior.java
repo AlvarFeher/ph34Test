@@ -24,7 +24,7 @@ public class Warrior extends Character {
     } // improved sword slash
 
     @Override
-    public int doAction(int param1) {
+    public int doAction(int param1, int param2) {
         return 0;
     }
 

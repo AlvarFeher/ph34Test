@@ -24,7 +24,7 @@ public class Cleric extends Character {
     }
 
     @Override
-    public int doAction(int healingNeeded) {
+    public int doAction(int healingNeeded, int param2) {
         if(healingNeeded == 1){
             return prayerOfHealing(getMind());
         } else {

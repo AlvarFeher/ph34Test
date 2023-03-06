@@ -38,7 +38,14 @@ public abstract class Character {
 
     public abstract int doAction();
 
-    public abstract int doAction(int param1);
+
+    /**
+     *
+     * @param param1 used as a flag to check if healing is needed during combat
+     * @param param2 used as a flag to check how many monsters are alive during combat
+     * @return
+     */
+    public abstract int doAction(int param1, int param2);
 
     /**
      * name getter

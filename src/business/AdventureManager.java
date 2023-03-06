@@ -297,11 +297,19 @@ public class AdventureManager {
      * @return the attack action value of the character
      */
 
-    public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters) {
+    // IMPORTANT !! needHealing is 1 if healing is needed, 0 if not
+    public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters, int needHealing) {
         int damage = 0;
+        System.out.println(getPartyMemberByName(currentAdventure,name).getCharacter());
 
-
-
+        List<Party> parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        Character character;
+        for(Party p: parties){
+            if(Objects.equals(p.getCharacter().getName(), name)){
+                character = p.getCharacter();
+                damage = character.doAction() + character.doAction(needHealing,currentAliveMonsters);
+            }
+        }
         return damage;
     }
 
@@ -313,13 +321,13 @@ public class AdventureManager {
      */
 
     // FIXME: add maximum hit points attribute to Party class
-    public boolean checkPartyHalfHp(String currentAdventure){
+    public int checkPartyHalfHp(String currentAdventure){
         for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
             if(c.getHitPoint() < c.getHitPoint()/2){
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
 
     /**
