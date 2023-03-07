@@ -360,12 +360,8 @@ public class UIController {
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
                         }
-
                         adventureManager.testPrint(currentAdventure,encounter_pos);
-
-
                     }
-
                 }
             }
             round++;

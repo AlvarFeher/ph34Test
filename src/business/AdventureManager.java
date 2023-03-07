@@ -525,12 +525,14 @@ public class AdventureManager {
     //FIXME: we'll have to add the damage reduction of bosses !!
 
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos){
+
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
 
         for(Monster m: monsters){
-            Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage,m.getInitiative(),m.getDamageType(),m.getDamageType());
+            String damage_dice = "d" + m.getDamageDice();
+            Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage,m.getInitiative(),damage_dice,m.getDamageType());
             new_monsters.add(newMonster);
         }
 
@@ -613,22 +615,7 @@ public class AdventureManager {
         return healing_arr;
     }
 
-    /**
-     * apply healing depending on class during combat phase
-     * @return
-     */
 
-    public int takeHealingActionCharacterCombat(String currentAdventure, String name){
-        int healing =0;
-        if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Cleric) {
-            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
-            healing = ((Cleric) getPartyMemberByName(currentAdventure, name).getCharacter()).prayerOfHealing(mind);
-        } else if (getPartyMemberByName(currentAdventure,name).getCharacter() instanceof Paladin) {
-            int mind = adventureJsonDAO.getCharactersMindByName(currentAdventure, name);
-            healing = ((Paladin) getPartyMemberByName(currentAdventure, name).getCharacter()).neverOnMyWatch(mind);
-        }
-        return healing;
-    }
 
     /**
      * get the number of adventures in the data set
