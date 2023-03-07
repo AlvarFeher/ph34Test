@@ -359,10 +359,10 @@ public class UIController {
                         }
 
                         else {  // alive monsters get da fireball
-                            // FIXME: this function is not coded
                             adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
                         }
                     }
+
                 }
             }
 

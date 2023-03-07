@@ -301,7 +301,6 @@ public class AdventureManager {
     // IMPORTANT !! needHealing is 1 if healing is needed, 0 if not
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters, int needHealing) {
         int damage = 0;
-        System.out.println(getPartyMemberByName(currentAdventure,name).getCharacter());
 
         List<Party> parties = adventureJsonDAO.getPartyByName(currentAdventure);
         Character character;
@@ -547,12 +546,31 @@ public class AdventureManager {
             return s;
         }
     }
+    //FIXME: we'll have to add the damage reduction of bosses !!
 
-    // FIXME: code this function
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos){
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
+
+        for(Monster m: monsters){
+            Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage,m.getInitiative(),m.getDamageType(),m.getDamageType());
+            new_monsters.add(newMonster);
+        }
+
+        List<List<Monster>> encounters = new ArrayList<>();
+        int i =0;
+        for(List<Monster> encounter : adventure.getEncounters()){
+            if(i != encounterPos)
+                encounters.add(encounter);
+            else
+                encounters.add(new_monsters);
+            i++;
+        }
+
+        Adventure newAdventure = new Adventure(adventure.getName(),adventure.getNum_encounters(),encounters,adventure.getParties());
+        adventureJsonDAO.update(newAdventure);
+
 
 
     }
@@ -581,7 +599,7 @@ public class AdventureManager {
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
-        int i =0;
+        int i;
         for (i=0; i < parties.size() ; i++){
             //update adventure with character healed
             Party newParty = new Party(parties.get(i).getCharacter(),parties.get(i).getHitPoint()+heal,characterJsonDao);
