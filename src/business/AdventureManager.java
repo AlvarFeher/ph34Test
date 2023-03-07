@@ -338,14 +338,18 @@ public class AdventureManager {
      * @return
      */
     // FIXME: add maximum hit points attribute to Party class
-    public boolean checkHealingNeeded(String currentAdventure){
+    public boolean checkHealingNeeded(String currentAdventure, List<Integer> maxHitPoints){
+        int i=0;
         for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
-            if(c.getHitPoint() < c.getHitPoint()/2){
+            if(c.getHitPoint() < maxHitPoints.get(i)/2){
                 return true;
             }
+            i++;
         }
         return false;
     }
+
+
 
     public boolean characterIsCleric(String currentAdventure, String characterName){
         for (Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
@@ -484,6 +488,8 @@ public class AdventureManager {
         return res[(int)Math.floor(Math.random() * (10) + 1)];
     }
 
+
+
     /**
      * the character whose turn to attack applies its damage dice on a monster
      * @param damage damage value
@@ -540,6 +546,50 @@ public class AdventureManager {
         else {
             return s;
         }
+    }
+
+    // FIXME: code this function
+    public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos){
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Monster> monsters = adventure.getEncounters().get(encounterPos);
+        List<Monster> new_monsters = new ArrayList<>();
+
+
+    }
+
+    public void applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Party> parties = adventure.getParties();
+        List<Party> new_parties = new ArrayList<>();
+        int i =0;
+        int flag =0; // flag to make sure only one character gets healed
+        for (i=0; i < parties.size() && flag == 0; i++){
+            if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2){
+                //update adventure with character healed
+                Party newParty = new Party(parties.get(i).getCharacter(),parties.get(i).getHitPoint()+heal,characterJsonDao);
+                new_parties.add(newParty);
+                flag = 1;
+            }else
+                new_parties.add(parties.get(i));
+            i++;
+        }
+        Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
+        adventureJsonDAO.update(new_adventure);
+    }
+
+    public void applyHealOnParty(int heal, String currentAdventure){
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Party> parties = adventure.getParties();
+        List<Party> new_parties = new ArrayList<>();
+        int i =0;
+        for (i=0; i < parties.size() ; i++){
+            //update adventure with character healed
+            Party newParty = new Party(parties.get(i).getCharacter(),parties.get(i).getHitPoint()+heal,characterJsonDao);
+            new_parties.add(newParty);
+            i++;
+        }
+        Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
+        adventureJsonDAO.update(new_adventure);
     }
 
     /**

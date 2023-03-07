@@ -4,6 +4,7 @@ package presentation;
 import business.*;
 import business.entities.*;
 import business.entities.Character;
+import business.entities.Classes.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -317,27 +318,50 @@ public class UIController {
             consoleUI.showRoundCombatStage(round, characterManager.getPartyNames(parties_inx), adventureManager.getHitPointsByindex(currentAdventure), max_hit_points);
 
             for (Combatant c : combatants) {
-                int damage;
-                int heal;
+                int actionValue;
+
                 int rollDiced = adventureManager.isItAHit();
                 if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, c.getName())) {
                     if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, c.getName())) {
-                        damage = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
-                        String party = adventureManager.applyDamageOnRandomConsciousParty(damage * rollDiced, currentAdventure, parties_inx);
+                        actionValue = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
+                        String party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx);
                         if (party == null) {
                             return;
                         }
-                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, damage * rollDiced);
+                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, actionValue * rollDiced);
                     }
                 }
                 else {
                     if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
 
-                        damage = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
+                        // we are considering both healing and damage value as the same
+                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
 
-                        // FIXME: must check how the 'damage' is applied in case of healing or wizard. Should change 'damage' to 'actionValue' or similar
-                        String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(damage * rollDiced, currentAdventure, encounter_pos);
-                        consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, damage * rollDiced);
+                        // FIXME: fix checkHealingNeeded, store initial max hit points
+                        // find character by name
+                        Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
+                        Character ch = p.getCharacter();
+
+                        // attack a random monster
+                        if(!(adventureManager.currentAliveMonsters(currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
+                            String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
+                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
+                        }
+
+                        // heal a character
+                        else if (ch instanceof Cleric && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
+                             adventureManager.applyHealOnCharacter(actionValue,currentAdventure,max_hit_points);
+                        }
+
+                        // heal all party members
+                        else if (ch instanceof Paladin && adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)) {
+                            adventureManager.applyHealOnParty(actionValue,currentAdventure);
+                        }
+
+                        else {  // alive monsters get da fireball
+                            // FIXME: this function is not coded
+                            adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
+                        }
                     }
                 }
             }
