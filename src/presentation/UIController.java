@@ -344,16 +344,19 @@ public class UIController {
                         // fireball to all alive monsters
                         if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) /*&& !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)**/){
                             adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
+                            System.out.println("FIREBALL");
                         }
 
                         // heal a character
                         else if (ch instanceof Cleric && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
                              adventureManager.applyHealOnCharacter(actionValue,currentAdventure,max_hit_points);
+                            System.out.println("cleric heals");
                         }
 
                         // heal all party members
                         else if (ch instanceof Paladin && adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)) {
                             adventureManager.applyHealOnParty(actionValue,currentAdventure);
+                            System.out.println("paladin heals");
                         }
 
                         else {  // attacks to a random monster
