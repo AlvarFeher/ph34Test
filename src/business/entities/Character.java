@@ -1,13 +1,16 @@
 package business.entities;
 
 
+import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
+
+
 
 /**
  * character entity
  */
-public abstract class Character {
-
+public class Character  {
+ //TODO: Make this abstract
     private String name;
     private String player;
     private int xp;
@@ -36,7 +39,7 @@ public abstract class Character {
         this.charClass = charClass;
     }
 
-    public abstract int doAction();
+    public int doAction(){return 0;}
 
 
     /**
@@ -45,7 +48,7 @@ public abstract class Character {
      * @param param2 used as a flag to check how many monsters are alive during combat
      * @return
      */
-    public abstract int doAction(int param1, int param2);
+    public  int doAction(int param1, int param2){return 0;}
 
     /**
      * name getter

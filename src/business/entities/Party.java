@@ -1,7 +1,9 @@
 package business.entities;
 
+import persistence.JSON.CharacterJsonDAO;
+
 /**
- * party entity
+ * party entity, a member of a party
  */
 public class Party {
     private Character character;
@@ -13,8 +15,8 @@ public class Party {
      * @param character character object
      * @param hitPoint hit point
      */
-    public Party(Character character, int hitPoint) {
-        this.character = character;
+    public Party(Character character, int hitPoint, CharacterJsonDAO dao) {
+        this.character = dao.assignClass(character.getName(), character.getPlayer(), character.getXp(),character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
         this.hitPoint = hitPoint;
     }
 

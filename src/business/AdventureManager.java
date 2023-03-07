@@ -251,7 +251,8 @@ public class AdventureManager {
         List<Integer> hit_points = characterManager.getMaxHitPointsByindex(parties_inx);
 
         for (int i=0;i< parties_inx.length;i++) {
-            parties.add(new Party(characterList.get(i), hit_points.get(i)));
+            Character c = characterList.get(i);
+            parties.add(new Party(characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass()), hit_points.get(i),characterJsonDao));
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
         adventureJsonDAO.update(new_adventure);
@@ -272,7 +273,7 @@ public class AdventureManager {
             int spirit = character.getSpirit() + 1;
 
             Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), character.getXp(), character.getBody(), character.getMind(), spirit, character.getCharClass());
-            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint());
+            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint(),characterJsonDao);
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
@@ -306,7 +307,9 @@ public class AdventureManager {
         Character character;
         for(Party p: parties){
             if(Objects.equals(p.getCharacter().getName(), name)){
-                character = p.getCharacter();
+                Character c = p.getCharacter();
+                character = characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass());
+
                 damage = character.doAction() + character.doAction(needHealing,currentAliveMonsters);
             }
         }
@@ -436,15 +439,15 @@ public class AdventureManager {
         for (int i=0;i< parties_inx.length;i++) {
             if (i == party_pos) {
                 if ( characters.get(i).getHitPoint() - damage > 0) {
-                    parties.add(new Party(characters.get(i).getCharacter(), characters.get(i).getHitPoint() - damage));
+                    parties.add(new Party(characters.get(i).getCharacter(), characters.get(i).getHitPoint() - damage,characterJsonDao));
                 }
                 else {
-                    parties.add(new Party(characters.get(i).getCharacter(), 0));
+                    parties.add(new Party(characters.get(i).getCharacter(), 0,characterJsonDao));
                     unconscious = true;
                 }
             }
             else {
-                parties.add(new Party(characters.get(i).getCharacter(), characters.get(i).getHitPoint()));
+                parties.add(new Party(characters.get(i).getCharacter(), characters.get(i).getHitPoint(),characterJsonDao));
             }
         }
 
@@ -641,7 +644,7 @@ public class AdventureManager {
                 list.add(characterManager.xpToLevel(xp));
             }
             Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
-            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint());
+            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint(),characterJsonDao);
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
@@ -665,11 +668,11 @@ public class AdventureManager {
             int hp = adventure.getParties().get(i).getHitPoint() + bandage_time[i];
             Party new_party;
             if (adventureJsonDAO.isPartyUnconsciousByPosition(adventure_name, i)) {
-                new_party = new Party(adventure.getParties().get(i).getCharacter(), 0);
+                new_party = new Party(adventure.getParties().get(i).getCharacter(), 0,characterJsonDao);
                 list.add(0);
             }
             else {
-                new_party = new Party(adventure.getParties().get(i).getCharacter(), hp);
+                new_party = new Party(adventure.getParties().get(i).getCharacter(), hp,characterJsonDao);
                 list.add(1);
             }
             parties.add(new_party);
