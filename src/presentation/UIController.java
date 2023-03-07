@@ -335,14 +335,14 @@ public class UIController {
                     if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
 
                         // we are considering both healing and damage value as the same
-                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
+                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
 
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
                         Character ch = p.getCharacter();
 
                         // fireball to all alive monsters
-                        if((adventureManager.currentAliveMonsters(currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
+                        if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) /*&& !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)**/){
                             adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
                         }
 
@@ -360,11 +360,14 @@ public class UIController {
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
                         }
+
+                        adventureManager.testPrint(currentAdventure,encounter_pos);
+
+
                     }
 
                 }
             }
-
             round++;
             consoleUI.showEndOfRound(round);
         }

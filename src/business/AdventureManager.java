@@ -348,30 +348,6 @@ public class AdventureManager {
         return false;
     }
 
-
-
-    public boolean characterIsCleric(String currentAdventure, String characterName){
-        for (Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
-            if(Objects.equals(c.getCharacter().getName(), characterName)){
-                if(c.getCharacter() instanceof Cleric){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean characterIsPaladin(String currentAdventure, String characterName){
-        for (Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
-            if(Objects.equals(c.getCharacter().getName(), characterName)){
-                if(c.getCharacter() instanceof Paladin){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * gets the attack action value of a monster
      * @param currentAdventure name of the adventure
@@ -575,6 +551,7 @@ public class AdventureManager {
 
     }
 
+    // should only heal a single character
     public void applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
@@ -757,8 +734,32 @@ public class AdventureManager {
      * @param encounterIndex encounter index in the adventure
      * @return amount of alive monsters, that number being the amount of existing monsters
      */
-    public int currentAliveMonsters(String currentAdventure, int encounterIndex){
-        return getMonsterNamesInEncounter(encounterIndex,currentAdventure).size();
+
+    //FIXME: this should return amount of monsters from Combatants. By the name it wont count monsters with same name
+    public int currentAliveMonsters(List<Combatant> combatants,String currentAdventure, int encounterIndex){
+        int count =0;
+        for(Combatant c : combatants){
+            if(isCombatantMonster(currentAdventure,encounterIndex,c.getName())){
+                count++;
+            }
+        }
+        System.out.println("current alive monsters: "+count +"\n");
+        return count;
+    }
+
+
+
+    public void testPrint(String currentAdventure, int encounterIndex){
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Party> parties = adventure.getParties();
+        List<List<Monster>> encounters = adventure.getEncounters();
+
+        for(Party p: parties){
+            System.out.println("name: "+p.getCharacter().getName()+"  hp: "+p.getHitPoint());
+        }
+        for(Monster m: encounters.get(encounterIndex) ){
+            System.out.println("name: "+m.getName()+"  hp: "+m.getHitPoints());
+        }
     }
 
 }
