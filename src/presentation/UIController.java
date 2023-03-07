@@ -341,11 +341,12 @@ public class UIController {
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
                         Character ch = p.getCharacter();
+                        //
 
-                        // attack a random monster
-                        if(!(adventureManager.currentAliveMonsters(currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
-                            String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
-                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
+
+                        // fireball to all alive monsters
+                        if((adventureManager.currentAliveMonsters(currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
+                            adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
                         }
 
                         // heal a character
@@ -358,8 +359,9 @@ public class UIController {
                             adventureManager.applyHealOnParty(actionValue,currentAdventure);
                         }
 
-                        else {  // alive monsters get da fireball
-                            adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
+                        else {  // attacks to a random monster
+                            String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
+                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
                         }
                     }
 

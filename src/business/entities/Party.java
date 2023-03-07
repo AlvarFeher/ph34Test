@@ -9,7 +9,7 @@ public class Party {
     private Character character;
     private int hitPoint;
     private int maxHitPoint; // initial hp value
-
+    CharacterJsonDAO dao = new CharacterJsonDAO();
     /**
      *
      * @param character character object
@@ -25,7 +25,7 @@ public class Party {
      * @return character
      */
     public Character getCharacter() {
-        return character;
+        return dao.assignClass(character.getName(),character.getPlayer(),character.getXp(),character.getBody(),character.getMind(),character.getSpirit(),character.getCharClass());
     }
 
     /**
