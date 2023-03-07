@@ -337,12 +337,9 @@ public class UIController {
                         // we are considering both healing and damage value as the same
                         actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
 
-                        // FIXME: fix checkHealingNeeded, store initial max hit points
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
                         Character ch = p.getCharacter();
-                        //
-
 
                         // fireball to all alive monsters
                         if((adventureManager.currentAliveMonsters(currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
