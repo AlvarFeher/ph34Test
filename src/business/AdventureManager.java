@@ -273,9 +273,10 @@ public class AdventureManager {
         for (int i=0;i< parties_inx.length;i++) {
             Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
             parties = character.preparationStageAction(adventure.getParties(),character.getName(),characterJsonDao);
+            Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
+            adventureJsonDAO.update(new_adventure);
         }
-        Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-        adventureJsonDAO.update(new_adventure);
+
     }
 
     /**
