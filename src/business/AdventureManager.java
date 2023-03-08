@@ -554,14 +554,15 @@ public class AdventureManager {
     }
 
     // should only heal a single character
+    // this does not work, it updates the party wrong
     public void applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
         int i =0;
-        int flag =0; // flag to make sure only one character gets healed
-        for (i=0; i < parties.size() && flag == 0; i++){
-            if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2){
+        int flag =0;
+        for (i=0; i <= parties.size(); i++){
+            if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2 && flag == 0){
                 //update adventure with character healed
                 Party newParty = new Party(parties.get(i).getCharacter(),parties.get(i).getHitPoint()+heal,characterJsonDao);
                 new_parties.add(newParty);
