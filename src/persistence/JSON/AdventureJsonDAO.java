@@ -336,8 +336,8 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
-                        return adventure.getParties().get(j).getCharacter().getCharClass();
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getCharClass();
                     }
                 }
             }
@@ -360,8 +360,8 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
-                        return adventure.getParties().get(j).getCharacter().getSpirit();
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getSpirit();
                     }
                 }
             }
@@ -393,8 +393,8 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
-                        return adventure.getParties().get(j).getCharacter().getBody();
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getBody();
                     }
                 }
             }
@@ -418,8 +418,8 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), name)) {
-                        return adventure.getParties().get(j).getCharacter().getXp();
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), name)) {
+                        return adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getXp();
                     }
                 }
             }
@@ -550,8 +550,8 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), partyName)) {
-                        return adventure.getParties().get(j).getCharacter().getMind();
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), partyName)) {
+                        return adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getMind();
                     }
                 }
             }
@@ -631,7 +631,7 @@ public class AdventureJsonDAO implements AdventureDAO {
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), currentAdventure)) {
                 for (int j = 0; j < adventure.getParties().size(); j++) {
-                    if (Objects.equals(adventure.getParties().get(j).getCharacter().getName(), s)) {
+                    if (Objects.equals(adventure.getParties().get(j).getCharacter(new CharacterJsonDAO()).getName(), s)) {
                         if(adventure.getParties().get(j).getHitPoint() < 1) {
                             return true;
                         }

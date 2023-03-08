@@ -5,6 +5,7 @@ import business.*;
 import business.entities.*;
 import business.entities.Character;
 import business.entities.Classes.*;
+import persistence.JSON.CharacterJsonDAO;
 
 import java.io.IOException;
 import java.util.*;
@@ -328,7 +329,7 @@ public class UIController {
                         if (party == null) {
                             return;
                         }
-                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, actionValue * rollDiced);
+                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, actionValue * rollDiced,"physical");
                     }
                 }
                 else {
@@ -339,10 +340,10 @@ public class UIController {
 
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
-                        Character ch = p.getCharacter();
+                        Character ch = p.getCharacter(new CharacterJsonDAO());
 
                         // fireball to all alive monsters
-                        if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) /*&& !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)**/){
+                        if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
                             adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
                             System.out.println("FIREBALL");
                         }
@@ -361,7 +362,7 @@ public class UIController {
 
                         else {  // attacks to a random monster
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
-                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced);
+                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(),currentAdventure));
                         }
                         adventureManager.testPrint(currentAdventure,encounter_pos);
                     }

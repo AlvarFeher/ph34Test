@@ -833,7 +833,7 @@ public class ConsoleUIManager {
      * @param rollDiced if the attack is a fail or a hit or a critical hit
      * @param damage the damage that the combatant being attacked will get
      */
-    public void showAttackAction(int monster_or_party, String s, String s2, int rollDiced, int damage) {
+    public void showAttackAction(int monster_or_party, String s, String s2, int rollDiced, int damage, String damageType) {
         //monster attacks party
         if (monster_or_party == 0) {
             String new_string;
@@ -843,8 +843,8 @@ public class ConsoleUIManager {
                 if (damage != Integer.MIN_VALUE) {
                     switch (rollDiced) {
                         case 0 -> System.out.println("Fails and deals 0 physical damage.");
-                        case 1 -> System.out.println("Hits and deals " + damage + " physical damage.");
-                        case 2 -> System.out.println("Critical hit and deals " + damage + " physical damage.");
+                        case 1 -> System.out.println("Hits and deals " + damage + " physical damage.\n");
+                        case 2 -> System.out.println("Critical hit and deals " + damage + " physical damage.\n");
                     }
                 }
                 System.out.println(s2 + "\n");
@@ -865,9 +865,9 @@ public class ConsoleUIManager {
                 System.out.println(s + " attacks " + s2.replace(" dies" , "") + ".");
                 if (damage != Integer.MIN_VALUE) {
                     switch (rollDiced) {
-                        case 0 -> System.out.println("Fails and deals 0 physical damage.");
-                        case 1 -> System.out.println("Hits and deals " + damage + " physical damage.");
-                        case 2 -> System.out.println("Critical hit and deals " + damage + " physical damage.");
+                        case 0 -> System.out.println("Fails and deals "+damageType+" damage.");
+                        case 1 -> System.out.println("Hits and deals " + damage + " "+damageType+" damage.\n");
+                        case 2 -> System.out.println("Critical hit and deals " + damage +" "+damageType+" damage.\n");
                     }
                 }
                 System.out.println(s2 + "\n");
@@ -878,9 +878,9 @@ public class ConsoleUIManager {
                 }
                 System.out.println(s + " attacks " + s2 + " with Sword slash.");
                 switch (rollDiced) {
-                    case 0 -> System.out.println("Fails and deals 0 physical damage.\n");
-                    case 1 -> System.out.println("Hits and deals " + damage + " physical damage.\n");
-                    case 2 -> System.out.println("Critical hit and deals " + damage + " physical damage.\n");
+                    case 0 -> System.out.println("Fails and deals"+damageType+" damage.");
+                    case 1 -> System.out.println("Hits and deals " + damage + " "+damageType+" damage.\n");
+                    case 2 -> System.out.println("Critical hit and deals" + damage +" "+damageType+" damage.\n");
                 }
             }
         }

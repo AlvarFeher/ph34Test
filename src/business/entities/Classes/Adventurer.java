@@ -1,6 +1,12 @@
 package business.entities.Classes;
 
 import business.entities.Character;
+import business.entities.Party;
+import persistence.JSON.CharacterJsonDAO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Adventurer extends Character {
     /**
@@ -29,6 +35,16 @@ public class Adventurer extends Character {
     }
 
 
-
-
+    // adventurers only add 1 spirit to themselves
+    @Override
+    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
+        List<Party> newParty = new ArrayList<>();
+        for(Party c: party){
+            if(Objects.equals(c.getCharacter(dao).getName(), charName)){
+                newParty.add(new Party(new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit()+1,c.getCharacter(dao).getCharClass()),c.getHitPoint(),dao));
+            }else
+                newParty.add(c);
+        }
+        return newParty;
+    }
 }

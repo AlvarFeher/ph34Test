@@ -1,9 +1,13 @@
 package business.entities.Classes;
 
 import business.entities.Character;
+import business.entities.Party;
+import persistence.JSON.CharacterJsonDAO;
+
+import java.util.List;
 
 public class Wizard extends Character {
-
+    private int shield;
 
     /**
      * constructor
@@ -40,5 +44,12 @@ public class Wizard extends Character {
 
     public int fireballAttack(int mind){
         return (int)Math.floor(Math.random() * (4) + 1) + mind;
+    }
+
+    // SHIELD WTF !!!
+    // FIXME: add shield points and make shield work during combat
+    @Override
+    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
+        return null;
     }
 }

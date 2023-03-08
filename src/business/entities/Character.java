@@ -3,7 +3,9 @@ package business.entities;
 
 import com.google.gson.InstanceCreator;
 import com.google.gson.annotations.SerializedName;
+import persistence.JSON.CharacterJsonDAO;
 
+import java.util.List;
 
 
 /**
@@ -49,6 +51,10 @@ public class Character  {
      * @return
      */
     public  int doAction(int param1, int param2){return 0;}
+
+    public List<Party> preparationStageAction(List<Party> parties, String charName, CharacterJsonDAO dao){return null; }
+
+    public int shortRestAction(){return 0; }
 
     /**
      * name getter
