@@ -342,6 +342,14 @@ public class UIController {
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
                         Character ch = p.getCharacter(new CharacterJsonDAO());
 
+                        String attackType ="";
+                        if(ch instanceof Adventurer || ch instanceof Warrior || ch instanceof Champion){
+                            attackType = "Physical";
+                        } else if (ch instanceof Wizard) {
+                            attackType = "Magical";
+                        }else
+                            attackType = "Psychical";
+
                         // fireball to all alive monsters
                         if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
                             adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
@@ -361,7 +369,7 @@ public class UIController {
                         }
 
                         else {  // attacks to a random monster
-                            String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos);
+                            String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(),currentAdventure));
                         }
                         adventureManager.testPrint(currentAdventure,encounter_pos);

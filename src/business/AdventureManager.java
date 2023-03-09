@@ -450,7 +450,6 @@ public class AdventureManager {
                             }                        }
                     }
 
-
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Wizard){
                         int damageTaken = damage -  characterManager.xpToLevel(characters.get(i).getCharacter(characterJsonDao).getXp());
                         if(Objects.equals(damageType, "Magical")){
@@ -516,7 +515,7 @@ public class AdventureManager {
      * @param encounterPos encounter position
      * @return the name of the monster being attacked
      */
-    public String applyDamageOnRandomMonsterInEncounter(int damage, String currentAdventure, int encounterPos) {
+    public String applyDamageOnRandomMonsterInEncounter(int damage, String currentAdventure, int encounterPos, String attackType) {
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
@@ -531,12 +530,24 @@ public class AdventureManager {
             String damage_dice = "d" + monsters.get(i).getDamageDice();
             if (i==monster_pos) {
                 s = monsters.get(i).getName();
-                if (monsters.get(i).getHitPoints() - damage >= 0) {
-                    new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints() - damage, monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
+                if(Objects.equals(monsters.get(i).getChallenge(), "Boss")){
+                    if (Objects.equals(monsters.get(i).getDamageType(), attackType)) {
+                        if (monsters.get(i).getHitPoints() - damage/2 >= 0) {
+                            new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints() - damage/2, monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
+                        }
+                        else {
+                            dead = true;
+                        }
+                    }else{
+                        if (monsters.get(i).getHitPoints() - damage >= 0) {
+                            new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints() - damage, monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
+                        }
+                        else {
+                            dead = true;
+                        }
+                    }
                 }
-                else {
-                    dead = true;
-                }
+
             }
             else {
                 new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints(), monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
@@ -566,8 +577,8 @@ public class AdventureManager {
             return s;
         }
     }
-    //FIXME: we'll have to add the damage reduction of bosses !!
 
+    //FIXME: we'll have to add the damage reduction of bosses !!
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos){
 
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
@@ -595,7 +606,6 @@ public class AdventureManager {
     }
 
     // should only heal a single character
-    //FIXME: this does not work, it updates the party wrong
     public void applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
