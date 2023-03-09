@@ -47,4 +47,18 @@ public class Warrior extends Character {
         return newParty;
     }
 
+    @Override
+    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterJsonDAO dao){
+        List<Party> newParty = new ArrayList<>();
+        for(Party c: parties){
+            int rand =(int)Math.floor(Math.random() * (8) + 1);
+            if(Objects.equals(c.getCharacter(dao).getName(), charName)){
+                Character ca = new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass());
+                newParty.add(new Party(ca,c.getHitPoint()+rand,dao));
+            }else
+                newParty.add(c);
+        }
+        return newParty;
+    }
+
 }

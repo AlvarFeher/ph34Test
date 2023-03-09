@@ -273,9 +273,8 @@ public class UIController {
                 consoleUI.printPreparationStageTitle();
                 consoleUI.printSelfMotivation(characterManager.getPartyNames(parties_inx));
 
-                //adding spirit +1 and do party initiative
+                //adding attribute bonus to party members from preparation stage actions
                 adventureManager.updatePartyInPrepStage(currentAdventure, parties_inx);
-
 
                 List<Combatant> combatants = combatantManager.rollInitiative(characterManager.getPartyNames(parties_inx), adventureManager.getMonsterNamesInEncounterUnfiltered(i, currentAdventure));
                 consoleUI.showRollingInitiative(combatantManager.getNames(combatants), combatantManager.getInitValues(combatants));
@@ -320,12 +319,13 @@ public class UIController {
 
             for (Combatant c : combatants) {
                 int actionValue;
-
+                String damageType;
                 int rollDiced = adventureManager.isItAHit();
                 if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, c.getName())) {
                     if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, c.getName())) {
                         actionValue = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
-                        String party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx);
+                        damageType = monsterManager.getDamageTypeOfMonster(c.getName());
+                        String party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx, damageType);
                         if (party == null) {
                             return;
                         }
@@ -386,7 +386,7 @@ public class UIController {
         int xp_gained = adventureManager.getXpGainedInEncounter(adventure_name, encounter_pos);
         List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, 22, parties_inx);
         consoleUI.showXpGaining(party_names, 22, lvl_increase);
-        int[] bandage_time =adventureManager.takeHealingActionCharacter(adventure_name, party_names);
+        int[] bandage_time = adventureManager.takeHealingActionCharacter(adventure_name, party_names);
         List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);
         consoleUI.showHealingTime(party_names, bandage_time, is_healed);
     }

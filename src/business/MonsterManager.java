@@ -120,4 +120,14 @@ public class MonsterManager {
         }
         return init_values;
     }
+
+    public String getDamageTypeOfMonster(String name){
+        List<Monster> monsters = monsterJsonDAO.getAll();
+        for(Monster m: monsters){
+            if(Objects.equals(m.getName(), name)){
+                return m.getDamageType();
+            }
+        }
+        return "";
+    }
 }

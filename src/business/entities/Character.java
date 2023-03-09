@@ -54,7 +54,7 @@ public class Character  {
 
     public List<Party> preparationStageAction(List<Party> parties, String charName, CharacterJsonDAO dao){return null; }
 
-    public int shortRestAction(){return 0; }
+    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterJsonDAO dao){return null; }
 
     /**
      * name getter
