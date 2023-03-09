@@ -412,9 +412,8 @@ public class AdventureManager {
         }while (adventureJsonDAO.isPartyUnconsciousByPosition(current_adventure, party_pos));
 
         boolean unconscious = false;
-        for (int i=0;i< parties_inx.length;i++) {
+        for (int i=0;i < parties_inx.length;i++) {
             if (i == party_pos) {
-
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Warrior || characters.get(i).getCharacter(characterJsonDao) instanceof Champion ){
                         if(Objects.equals(damageType, "Physical")){
                             if(characters.get(i).getHitPoint() - damage/2 > 0){
@@ -465,14 +464,23 @@ public class AdventureManager {
                             }else{
                                 parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
                                 unconscious = true;
-                            }                                        }
+                            }
+                        }
+                    }
+
+                    if(characters.get(i).getCharacter(characterJsonDao) instanceof Adventurer || characters.get(i).getCharacter(characterJsonDao) instanceof Cleric){
+                        if(characters.get(i).getHitPoint() - damage > 0){
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                        }else{
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            unconscious = true;
+                        }
                     }
             }
             else {
                 parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint(),characterJsonDao));
             }
         }
-
         new_adventure =  new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
         adventureJsonDAO.update(new_adventure);
         if (unconscious) {

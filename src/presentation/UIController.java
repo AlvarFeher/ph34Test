@@ -338,6 +338,9 @@ public class UIController {
                         // we are considering both healing and damage value as the same
                         actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
 
+                        System.out.println("**********TEST**********+");
+                        adventureManager.testPrint(currentAdventure,encounter_pos);
+
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
                         Character ch = p.getCharacter(new CharacterJsonDAO());
@@ -372,6 +375,7 @@ public class UIController {
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(),currentAdventure));
                         }
+
                         adventureManager.testPrint(currentAdventure,encounter_pos);
                     }
                 }
