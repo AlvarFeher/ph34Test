@@ -532,12 +532,12 @@ public class AdventureManager {
 
         int[] aliveMonsters;
 
-
         boolean dead = false;
         for (int i=0;i<monsters.size();i++) {
             String damage_dice = "d" + monsters.get(i).getDamageDice();
             if (i==monster_pos) {
                 s = monsters.get(i).getName();
+
                 if(Objects.equals(monsters.get(i).getChallenge(), "Boss")){
                     if (Objects.equals(monsters.get(i).getDamageType(), attackType)) {
                         if (monsters.get(i).getHitPoints() - damage/2 >= 0) {
@@ -547,12 +547,19 @@ public class AdventureManager {
                             dead = true;
                         }
                     }else{
-                        if (monsters.get(i).getHitPoints() - damage >= 0) {
+                        if (monsters.get(i).getHitPoints() - damage > 0) {
                             new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints() - damage, monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
                         }
                         else {
                             dead = true;
                         }
+                    }
+                }else{
+                    if (monsters.get(i).getHitPoints() - damage > 0) {
+                        new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints() - damage, monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
+                    }
+                    else {
+                        dead = true;
                     }
                 }
 
