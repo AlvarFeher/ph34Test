@@ -231,7 +231,6 @@ public class UIController {
             String currentAdventure = adventureManager.getAdventureNameByIndex(adventure_index);
 
             Adventure adventure_copy = adventureManager.getCopyAdventure(currentAdventure);
-
             int characterCount = characterManager.getCharacterCount();
             int characterNum = consoleUI.chooseNumOfCharactersAdventure(currentAdventure, characterCount);
 
@@ -265,6 +264,7 @@ public class UIController {
             // FIXME: check down from here *********************
 
             for (int i = 0; i < adventureManager.getNumOfEncountersByName(currentAdventure); i++) {
+                int xp_gain = adventureManager.getXpGainedInEncounter(currentAdventure, i);
                 consoleUI.showEncounterMsg(i);
                 List<String> monsters = adventureManager.getMonsterNamesInEncounter(i, currentAdventure);
                 for (String monster : monsters) {
@@ -290,7 +290,7 @@ public class UIController {
                     run();
                 }
                 //short rest stage
-                shortRestStageXp(parties_inx, currentAdventure, i);  // gain xp
+                shortRestStageXp(parties_inx, currentAdventure, xp_gain);  // gain xp
                 adventureManager.updatePartyInShortRestStage(currentAdventure,parties_inx); // character actions
             }
 
@@ -399,14 +399,13 @@ public class UIController {
      * controlling the short rest stage of the adventure execution
      * @param parties_inx the parties in an adventure
      * @param adventure_name the name of the adventure
-     * @param encounter_pos the encounter position
+     * @param xp_gain the xp from monsters in encounter
      */
-    private void shortRestStageXp(int[] parties_inx, String adventure_name, int encounter_pos) {
+    private void shortRestStageXp(int[] parties_inx, String adventure_name, int xp_gain) {
         consoleUI.printRestStageTitle();
         String[] party_names = characterManager.getPartyNames(parties_inx);
-        int xp_gained = adventureManager.getXpGainedInEncounter(adventure_name, encounter_pos);
-        List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, 22, parties_inx);
-        consoleUI.showXpGaining(party_names, 22, lvl_increase);
+        List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, xp_gain, parties_inx);
+        consoleUI.showXpGaining(party_names, xp_gain, lvl_increase);
 
        // int[] bandage_time = adventureManager.takeHealingActionCharacter(adventure_name, party_names);
         //List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);

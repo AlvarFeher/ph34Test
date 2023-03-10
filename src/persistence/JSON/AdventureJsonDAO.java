@@ -513,19 +513,15 @@ public class AdventureJsonDAO implements AdventureDAO {
         } catch (FileNotFoundException e) {
             return Integer.MIN_VALUE;
         }
-        int size = 0;
         int sum_xp = 0;
         for (Adventure adventure : list) {
             if (Objects.equals(adventure.getName(), adventure_name)) {
                 for (int i=0;i<adventure.getEncounters().get(encounter_pos).size();i++) {
-                    if (adventure.getEncounters().get(encounter_pos).get(i).getHitPoints() > 0) {
                         sum_xp += adventure.getEncounters().get(encounter_pos).get(i).getExperience();
-                        size++;
-                    }
                 }
             }
         }
-        return sum_xp * size;
+        return sum_xp;
     }
 
     /**
