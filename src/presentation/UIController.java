@@ -290,7 +290,7 @@ public class UIController {
                     run();
                 }
                 //short rest stage
-                shortRestStageXp(parties_inx, currentAdventure, i, xp_gain);  // gain xp
+                shortRestStageXp(parties_inx, currentAdventure, xp_gain);  // gain xp
                 adventureManager.updatePartyInShortRestStage(currentAdventure,parties_inx); // character actions
 
 
@@ -401,9 +401,9 @@ public class UIController {
      * controlling the short rest stage of the adventure execution
      * @param parties_inx the parties in an adventure
      * @param adventure_name the name of the adventure
-     * @param encounter_pos the encounter position
+     * @param xp_gain the xp from monsters in encounter
      */
-    private void shortRestStageXp(int[] parties_inx, String adventure_name, int encounter_pos, int xp_gain) {
+    private void shortRestStageXp(int[] parties_inx, String adventure_name, int xp_gain) {
         consoleUI.printRestStageTitle();
         String[] party_names = characterManager.getPartyNames(parties_inx);
         List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, xp_gain, parties_inx);
