@@ -268,11 +268,21 @@ public class AdventureManager {
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = new ArrayList<>();
 
-        // each character performs its own preparation stage action and returns the updated
-        // FIXME: parties are not updated right, must keep a copy of parties and keep adding up the prep stage actions
         for (int i=0;i< parties_inx.length;i++) {
             Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
             parties = character.preparationStageAction(adventure.getParties(),character.getName(),characterJsonDao);
+            Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
+            adventureJsonDAO.update(new_adventure);
+        }
+    }
+
+    public void updatePartyInShortRestStage(String currentAdventure, int[] parties_inx){
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Party> parties = new ArrayList<>();
+
+        for (int i = 0; i < parties_inx.length; i++) {
+            Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
+            parties = character.shortRestAction(adventure.getParties(),character.getName(),characterJsonDao);
             Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
             adventureJsonDAO.update(new_adventure);
         }
