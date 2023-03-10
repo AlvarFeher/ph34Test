@@ -52,4 +52,6 @@ public class Wizard extends Character {
     public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
         return null;
     }
+
+    // NO SHORT REST ACTION
 }

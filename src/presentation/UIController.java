@@ -290,7 +290,10 @@ public class UIController {
                     run();
                 }
                 //short rest stage
-                shortRestStage(parties_inx, currentAdventure, i);
+                shortRestStageXp(parties_inx, currentAdventure, i);  // gain xp
+                adventureManager.updatePartyInShortRestStage(currentAdventure,parties_inx); // character actions
+
+
             }
 
 
@@ -353,7 +356,6 @@ public class UIController {
                         }
                         if (p != null) {
 
-
                         Character ch = p.getCharacter(new CharacterJsonDAO());
 
                         String attackType = "";
@@ -384,7 +386,6 @@ public class UIController {
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
                         }
-
                         adventureManager.testPrint(currentAdventure, encounter_pos);
                     }
                     }
@@ -402,14 +403,15 @@ public class UIController {
      * @param adventure_name the name of the adventure
      * @param encounter_pos the encounter position
      */
-    private void shortRestStage(int[] parties_inx, String adventure_name, int encounter_pos) {
+    private void shortRestStageXp(int[] parties_inx, String adventure_name, int encounter_pos) {
         consoleUI.printRestStageTitle();
         String[] party_names = characterManager.getPartyNames(parties_inx);
         int xp_gained = adventureManager.getXpGainedInEncounter(adventure_name, encounter_pos);
         List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, 22, parties_inx);
         consoleUI.showXpGaining(party_names, 22, lvl_increase);
-        int[] bandage_time = adventureManager.takeHealingActionCharacter(adventure_name, party_names);
-        List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);
-        consoleUI.showHealingTime(party_names, bandage_time, is_healed);
+
+       // int[] bandage_time = adventureManager.takeHealingActionCharacter(adventure_name, party_names);
+        //List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);
+       // consoleUI.showHealingTime(party_names, bandage_time, is_healed);
     }
 }
