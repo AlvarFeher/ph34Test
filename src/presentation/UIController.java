@@ -229,6 +229,9 @@ public class UIController {
             }
             int adventure_index = consoleUI.chooseAdventure(adventure_size) - 1;
             String currentAdventure = adventureManager.getAdventureNameByIndex(adventure_index);
+
+            Adventure adventure_copy = adventureManager.getCopyAdventure(currentAdventure);
+
             int characterCount = characterManager.getCharacterCount();
             int characterNum = consoleUI.chooseNumOfCharactersAdventure(currentAdventure, characterCount);
 
@@ -292,6 +295,7 @@ public class UIController {
 
 
             consoleUI.showPartyCompleteAdventure(currentAdventure);
+            adventureManager.resetAdventure(adventure_copy);
         }
 
         run();

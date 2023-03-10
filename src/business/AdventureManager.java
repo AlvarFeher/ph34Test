@@ -835,4 +835,12 @@ public class AdventureManager {
         }
     }
 
+
+    public Adventure getCopyAdventure(String currentAdventure) {
+        return adventureJsonDAO.getAdventureByName(currentAdventure);
+    }
+
+    public void resetAdventure(Adventure adventure_copy) {
+        adventureJsonDAO.update(adventure_copy);
+    }
 }
