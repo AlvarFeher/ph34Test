@@ -324,6 +324,7 @@ public class UIController {
                 if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, c.getName())) {
                     if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, c.getName())) {
                         actionValue = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
+
                         damageType = monsterManager.getDamageTypeOfMonster(c.getName());
                         String party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx, damageType);
                         if (party == null) {
@@ -336,47 +337,52 @@ public class UIController {
                     if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
 
                         // we are considering both healing and damage value as the same
-                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos),adventureManager.checkPartyHalfHp(currentAdventure));
+                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos), adventureManager.checkPartyHalfHp(currentAdventure));
 
                         System.out.println("**********TEST**********+");
-                        adventureManager.testPrint(currentAdventure,encounter_pos);
+                        adventureManager.testPrint(currentAdventure, encounter_pos);
 
                         // find character by name
-                        Party p = adventureManager.getPartyMemberByName(currentAdventure,c.getName());
+                        Party p = adventureManager.getPartyMemberByName(currentAdventure, c.getName());
+                        if(p == null){
+                            System.out.println("\n***************************  p is null \n");
+                        }
+                        if (p != null) {
+
+
                         Character ch = p.getCharacter(new CharacterJsonDAO());
 
-                        String attackType ="";
-                        if(ch instanceof Adventurer || ch instanceof Warrior || ch instanceof Champion){
+                        String attackType = "";
+                        if (ch instanceof Adventurer || ch instanceof Warrior || ch instanceof Champion) {
                             attackType = "Physical";
                         } else if (ch instanceof Wizard) {
                             attackType = "Magical";
-                        }else
+                        } else
                             attackType = "Psychical";
 
                         // fireball to all alive monsters
-                        if((adventureManager.currentAliveMonsters(combatants,currentAdventure,encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)){
-                            adventureManager.applyDamageOnAllMonsters(actionValue,currentAdventure,encounter_pos);
+                        if ((adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
+                            adventureManager.applyDamageOnAllMonsters(actionValue, currentAdventure, encounter_pos);
                             System.out.println("FIREBALL");
                         }
 
                         // heal a character
                         else if (ch instanceof Cleric && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
-                             adventureManager.applyHealOnCharacter(actionValue,currentAdventure,max_hit_points);
+                            adventureManager.applyHealOnCharacter(actionValue, currentAdventure, max_hit_points);
                             System.out.println("cleric heals");
                         }
 
                         // heal all party members
-                        else if (ch instanceof Paladin && adventureManager.checkHealingNeeded(currentAdventure,max_hit_points)) {
-                            adventureManager.applyHealOnParty(actionValue,currentAdventure);
+                        else if (ch instanceof Paladin && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
+                            adventureManager.applyHealOnParty(actionValue, currentAdventure);
                             System.out.println("paladin heals");
-                        }
-
-                        else {  // attacks to a random monster
+                        } else {  // attacks to a random monster
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
-                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(),currentAdventure));
+                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
                         }
 
-                        adventureManager.testPrint(currentAdventure,encounter_pos);
+                        adventureManager.testPrint(currentAdventure, encounter_pos);
+                    }
                     }
                 }
             }
@@ -402,6 +408,4 @@ public class UIController {
         List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);
         consoleUI.showHealingTime(party_names, bandage_time, is_healed);
     }
-
-
 }

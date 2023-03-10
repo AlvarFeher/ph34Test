@@ -389,6 +389,12 @@ public class AdventureManager {
         return adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
     }
 
+    // FIXME
+    // attack from Boss Monster
+    private void attackAllConsciousCharacters(){
+
+    }
+
     /**
      * the monster whose turn to attack applies its damage dice on a non-unconscious party
      * @param damage damage value
@@ -562,7 +568,6 @@ public class AdventureManager {
                         dead = true;
                     }
                 }
-
             }
             else {
                 new_monsters.add(new Monster(monsters.get(i).getName(), monsters.get(i).getChallenge(), monsters.get(i).getExperience(), monsters.get(i).getHitPoints(), monsters.get(i).getInitiative(), damage_dice, monsters.get(i).getDamageType()));
@@ -625,17 +630,16 @@ public class AdventureManager {
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
-        int i =0;
         int flag =0;
-        for (i=0; i < parties.size(); i++){
+        for (int i=0; i < parties.size(); i++){
             if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2 && flag == 0){
                 //update adventure with character healed
                 Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao);
                 new_parties.add(newParty);
                 flag = 1;
-            }else
+            }else {
                 new_parties.add(parties.get(i));
-            i++;
+            }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
         adventureJsonDAO.update(new_adventure);
