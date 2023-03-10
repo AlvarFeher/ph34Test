@@ -71,22 +71,22 @@ public class CharacterManager {
 
     public String levelToClass(int level, String initialClass) {
         String finalClass = "";
-        if(Objects.equals(initialClass, "adventurer")){
+        if(Objects.equals(initialClass, "Adventurer")){
             if (level < 4 && level > 0) {
-                finalClass = "adventurer";
+                finalClass = "Adventurer";
             } else if (level < 8 && level > 3) {
-                finalClass = "warrior";
+                finalClass = "Warrior";
             } else if (level <= 10 && level > 7) {
-                finalClass = "champion";
+                finalClass = "Champion";
             }
-        } else if (Objects.equals(initialClass, "cleric")) {
+        } else if (Objects.equals(initialClass, "Cleric")) {
             if (level > 0 && level < 5) {
-                finalClass = "cleric";
+                finalClass = "Cleric";
             } else {
-                finalClass = "paladin";
+                finalClass = "Paladin";
             }
-        } else if (Objects.equals(initialClass, "wizard")) {
-            finalClass = "wizard";
+        } else if (Objects.equals(initialClass, "Wizard")) {
+            finalClass = "Wizard";
         }
         return finalClass;
     }
@@ -140,7 +140,7 @@ public class CharacterManager {
                 return characterJsonDAO.add(character);
 
             case "Wizard":
-                character = new Wizard(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
+                character = new Wizard(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass),0);
                 return characterJsonDAO.add(character);
         }
        return 1;

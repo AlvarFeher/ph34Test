@@ -292,8 +292,6 @@ public class UIController {
                 //short rest stage
                 shortRestStageXp(parties_inx, currentAdventure, i);  // gain xp
                 adventureManager.updatePartyInShortRestStage(currentAdventure,parties_inx); // character actions
-
-
             }
 
 

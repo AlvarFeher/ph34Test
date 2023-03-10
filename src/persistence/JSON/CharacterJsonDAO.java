@@ -248,7 +248,7 @@ public class CharacterJsonDAO implements CharacterDAO {
             case "Paladin":
                 return  new Paladin(name, player, xp, body, mind, spirit, charClass);
             case "Wizard":
-                return  new Wizard(name, player, xp, body, mind, spirit, charClass);
+                return  new Wizard(name, player, xp, body, mind, spirit, charClass,0);
         }
         return null;
     }

@@ -288,6 +288,11 @@ public class AdventureManager {
         }
     }
 
+    // update party with the gained xp of the adventure
+    public void updatePartyXpGaining(){
+
+    }
+
     /**
      * checks if a combatant is a monster
      * @param currentAdventure name of adventure
@@ -465,21 +470,31 @@ public class AdventureManager {
                             }                        }
                     }
 
+                    // TODO: EL DAMAGE DEL BOSS Y SHIELD DEL WIZARD: shield done
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Wizard){
                         int damageTaken = damage -  characterManager.xpToLevel(characters.get(i).getCharacter(characterJsonDao).getXp());
+                        int shield = ((Wizard) characters.get(i).getCharacter(characterJsonDao)).getShield();
                         if(Objects.equals(damageType, "Magical")){
-                            if(characters.get(i).getHitPoint() - damageTaken > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao));
+                            if(shield > 0){
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
-                                unconscious = true;
+                                if(characters.get(i).getHitPoint() - damageTaken > 0){
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao));
+                                }else{
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                    unconscious = true;
+                                }
                             }
                         }else{
-                            if(characters.get(i).getHitPoint() - damage > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                            if(shield > 0){
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
-                                unconscious = true;
+                                if(characters.get(i).getHitPoint() - damage > 0){
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                                }else{
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                    unconscious = true;
+                                }
                             }
                         }
                     }
