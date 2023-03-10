@@ -14,7 +14,7 @@ import java.util.List;
 public class AdventureApiDAO implements AdventureDAO {
 
     private ApiHelper apiHelper;
-    private final String base_url = "https://balandrau.salle.url.edu/dpoo/S1-Project_ICE42/adventures";
+    private final String base_url = "https://balandrau.salle.url.edu/dpoo/S1-Project_ICE10/adventures";
 
     /**
      * Constructor initializing a new object of Api Helper
