@@ -52,7 +52,7 @@ public class ConsoleUIManager {
             
             """;
 
-    private static final String LOAD = "Loading data...";
+    private static final String LOAD = "\nLoading data...";
 
     /**
      * shows the logo of the game
@@ -237,12 +237,22 @@ public class ConsoleUIManager {
      * shows if the databases are successfully loaded
      * @param loaded is monster database correctly loaded
      */
-    public void showLoadingError(boolean loaded) {
-        if (loaded) {
-            System.out.println(MessageView.LOADING_JSON_SUCCESS);
+    public void showLoadingError(boolean loaded, boolean is_local) {
+        if (is_local) {
+            if (loaded) {
+                System.out.println(MessageView.LOADING_DATA_SUCCESS);
+            } else {
+                System.out.println(MessageView.LOADING_MONSTER_ERROR);
+            }
         }
         else {
-            System.out.println(MessageView.LOADING_MONSTER_ERROR);
+            if (loaded) {
+                System.out.println(MessageView.LOADING_DATA_SUCCESS);
+            }
+            else {
+                System.out.println(MessageView.NO_SERVER_ACCESS);
+                System.out.println(MessageView.REVERT_TO_LOCAL);
+            }
         }
     }
 
@@ -278,11 +288,10 @@ public class ConsoleUIManager {
     public String askInitialClass(){
         String init_class;
         init_class = getStringValue("-> Enter the character’s initial class [Adventurer, Cleric, Wizard]:");
-        init_class = init_class.toLowerCase();
         switch (init_class) {
-            case "adventurer" : return "adventurer";
-            case "cleric" : return "cleric";
-            case "wizard" : return "wizard";
+            case "Adventurer" : return "Adventurer";
+            case "Cleric" : return "Cleric";
+            case "Wizard" : return "Wizard";
             default:
                 System.out.println(MessageView.NOT_VALID_OPTION_MENU);
                 askInitialClass();

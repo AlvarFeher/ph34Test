@@ -26,6 +26,8 @@ public class MonsterApiDAO implements MonsterDAO {
         }
     }
 
+
+
     /**
      * retrieve all the monsters that are stored in the cloud
      * @return a list of all the monsters in the cloud
@@ -37,9 +39,8 @@ public class MonsterApiDAO implements MonsterDAO {
             Type type = new TypeToken<ArrayList<Monster>>() {}.getType();
             return gson.fromJson(all , type);
         } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**

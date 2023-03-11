@@ -1,6 +1,7 @@
 package business;
 
 import business.entities.Monster;
+import persistence.API.MonsterApiDAO;
 import persistence.JSON.MonstersJsonDAO;
 import persistence.MonsterDAO;
 
@@ -21,12 +22,23 @@ import java.util.Objects;
 public class MonsterManager {
 
     private final MonsterDAO monsterJsonDAO;
+    private final MonsterDAO monsterApiDAO;
+    private boolean is_local;
+
+    public boolean isIt_local() {
+        return is_local;
+    }
+
+    public void setIs_local(boolean is_local) {
+        this.is_local = is_local;
+    }
 
     /**
      * constructor
      */
     public MonsterManager() {
         monsterJsonDAO = new MonstersJsonDAO();
+        monsterApiDAO = new MonsterApiDAO();
     }
 
     /**
@@ -34,7 +46,11 @@ public class MonsterManager {
      * @return a list of monsters
      */
     public List<Monster> loadMonsters() {
-        return monsterJsonDAO.getAll();
+        if (isIt_local()) {
+            return monsterJsonDAO.getAll();
+        }else {
+            return monsterApiDAO.getAll();
+        }
     }
 
     /**

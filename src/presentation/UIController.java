@@ -16,8 +16,8 @@ import java.util.*;
 public class UIController {
     private final ConsoleUIManager consoleUI;
     private final CharacterManager characterManager;
-    private final MonsterManager monsterManager;
-    private final CombatantManager combatantManager;
+    private MonsterManager monsterManager;
+    private CombatantManager combatantManager;
     private final AdventureManager adventureManager;
 
     private boolean isLocal = true; // temporary variable for storage management
@@ -26,10 +26,10 @@ public class UIController {
      */
     public UIController() {
         consoleUI = new ConsoleUIManager();
-        monsterManager = new MonsterManager();
         characterManager = new CharacterManager();
-        combatantManager = new CombatantManager();
         adventureManager = new AdventureManager();
+        monsterManager = new MonsterManager();
+        combatantManager = new CombatantManager();
     }
 
     /**
@@ -40,17 +40,38 @@ public class UIController {
 
         // todo: add persistence.API data option
         switch (consoleUI.showStorageMenuOptions()){
-            case CLOUD -> isLocal = false; // this is probably a bad practice
+            case CLOUD -> isLocal = false;
             case LOCAL -> isLocal = true;
         }
-        consoleUI.loadData();
 
-        if (monsterManager.loadMonsters() == null) {
-            consoleUI.showLoadingError(false);
+        loadAndConnect();
+    }
+
+
+    private void loadAndConnect() {
+        consoleUI.loadData();
+        if (isLocal) {
+            monsterManager.setIs_local(true);
+            if (monsterManager.loadMonsters() == null) {
+                consoleUI.showLoadingError(false, true);
+            } else {
+                consoleUI.showLoadingError(true, true);
+                isLocal = true;
+                run();
+            }
         }
         else {
-            consoleUI.showLoadingError(true);
-            run();
+            if (monsterManager.loadMonsters() == null) {
+                consoleUI.showLoadingError(false, false);
+                isLocal = true;
+                monsterManager.setIs_local(true);
+                loadAndConnect();
+            } else {
+                consoleUI.showLoadingError(true, false);
+                isLocal = false;
+                monsterManager.setIs_local(false);
+                run();
+            }
         }
     }
 
@@ -58,9 +79,9 @@ public class UIController {
      * controls the main menu options
      */
     private void run() {
+        characterManager.setLocal(isLocal);
+
         int characterCount = characterManager.getCharacterCount();
-
-
 
         switch (consoleUI.showMainMenu(characterCount)) {
             case CHARACTER_CREATION -> characterCreation();

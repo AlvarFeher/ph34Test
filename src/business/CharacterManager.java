@@ -3,6 +3,7 @@ package business;
 import business.entities.Character;
 import business.entities.Classes.*;
 import business.entities.Party;
+import persistence.API.CharacterApiDAO;
 import persistence.CharacterDAO;
 
 import persistence.JSON.CharacterJsonDAO;
@@ -18,6 +19,17 @@ import java.util.Objects;
 public class CharacterManager {
 
     private final CharacterDAO characterJsonDAO;
+    private final CharacterDAO characterApiDAO;
+    private boolean local;
+
+
+    public boolean isLocal() {
+        return local;
+    }
+
+    public void setLocal(boolean local) {
+        this.local = local;
+    }
 
     //todo: new character classes (adventurer, cleric, wizard)
     // classes evolve with level
@@ -29,6 +41,7 @@ public class CharacterManager {
      */
     public CharacterManager() {
         characterJsonDAO = new CharacterJsonDAO();
+        characterApiDAO = new CharacterApiDAO();
     }
 
     /**
@@ -113,37 +126,62 @@ public class CharacterManager {
      * @param level character's level
      * @param body character's body statistics
      * @param mind character's mind statistics
-     * @param spirit character's spitit statistics
+     * @param spirit character's spirit statistics
      * @return if the character is created
      */
     public int createCharacter(String name, String player_name, int level, int body, int mind, int spirit, String initialClass) {
         Character character;
-        switch(initialClass){
-            case "Adventurer":
-                character = new Adventurer(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-                return characterJsonDAO.add(character);
-
-            case "Warrior":
-                character = new Warrior(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-                return characterJsonDAO.add(character);
-
-            case "Champion":
-                character = new Champion(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-                return characterJsonDAO.add(character);
-
-            case "Cleric":
-                character = new Cleric(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-                return characterJsonDAO.add(character);
-
-            case "Paladin":
-                character = new Paladin(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass));
-                return characterJsonDAO.add(character);
-
-            case "Wizard":
-                character = new Wizard(adjustCharacterName(name), player_name, levelToXp(level), body, mind ,spirit,levelToClass(level,initialClass),0);
-                return characterJsonDAO.add(character);
+        switch (initialClass) {
+            case "Adventurer" -> {
+                character = new Adventurer(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass));
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
+            case "Warrior" -> {
+                character = new Warrior(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass));
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
+            case "Champion" -> {
+                character = new Champion(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass));
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
+            case "Cleric" -> {
+                character = new Cleric(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass));
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
+            case "Paladin" -> {
+                character = new Paladin(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass));
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
+            case "Wizard" -> {
+                character = new Wizard(adjustCharacterName(name), player_name, levelToXp(level), body, mind, spirit, levelToClass(level, initialClass), 0);
+                if (isLocal()) {
+                    return characterJsonDAO.add(character);
+                } else {
+                    return characterApiDAO.add(character);
+                }
+            }
         }
-       return 1;
+        return 1;
     }
 
     /**
@@ -173,7 +211,13 @@ public class CharacterManager {
      */
     public List<String> listCharacters(String name) {
         List<String> names = new ArrayList<>();
-        List<Character> list = characterJsonDAO.getCharactersByPart(name);
+        List<Character> list;
+        if (isLocal()) {
+            list = characterJsonDAO.getCharactersByPart(name);
+        }
+        else {
+            list = characterApiDAO.getCharactersByPart(name);
+        }
         for (Character character : list) {
             names.add(character.getName());
         }
@@ -187,7 +231,12 @@ public class CharacterManager {
      * @return the character
      */
     public Character getCharacterByindex(String name, int index) {
-        return characterJsonDAO.getCharactersByPart(name).get(index - 1);
+        if (isLocal()) {
+            return characterJsonDAO.getCharactersByPart(name).get(index - 1);
+        }
+        else {
+            return characterApiDAO.getCharactersByPart(name).get(index - 1);
+        }
     }
 
     /**
@@ -195,7 +244,12 @@ public class CharacterManager {
      * @param character_to_delete name of character
      */
     public void deleteCharacter(String character_to_delete) {
-        characterJsonDAO.delete(character_to_delete);
+        if (isLocal()) {
+            characterJsonDAO.delete(character_to_delete);
+        }
+        else {
+            characterApiDAO.delete(character_to_delete);
+        }
     }
 
     /**
@@ -203,7 +257,12 @@ public class CharacterManager {
      * @return the number of characters in the data set
      */
     public int getCharacterCount(){
-        return characterJsonDAO.getAll().size();
+        if (isLocal()) {
+            return characterJsonDAO.getAll().size();
+        }
+        else {
+            return characterApiDAO.getAll().size();
+        }
     }
 
     /**

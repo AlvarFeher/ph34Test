@@ -22,9 +22,9 @@ public enum MessageView {
      */
     LOADING_MONSTER_ERROR("Error: The monsters.json file can’t be accessed."),
     /**
-     * shows when all json files are available
+     * shows when data can be accessed
      */
-    LOADING_JSON_SUCCESS("Data was successfully loaded.\n"),
+    LOADING_DATA_SUCCESS("Data was successfully loaded.\n"),
     /**
      * shows when entering a number within the character's name
      */
@@ -76,7 +76,17 @@ public enum MessageView {
     /**
      * shows when trying to choose the party of an adventure, and the character numbers are less than 5
      */
-    EXCEPTION_MAX_VAL("Sorry, but in this case we don't accept this value, as the number of characters is less that the value you have chosen");
+    EXCEPTION_MAX_VAL("Sorry, but in this case we don't accept this value, as the number of characters is less that the value you have chosen"),
+    /**
+     * shows when trying to access the cloud as your storage system, and it fails to connect
+     */
+    NO_SERVER_ACCESS("Couldn’t connect to the remote server."),
+    /**
+     * shows when trying to access the cloud as your storage system, and it fails to connect, and we are informing you that
+     * we will revert to a local storage mode
+     */
+    REVERT_TO_LOCAL("Reverting to local data.\n");
+
 
     /**
      * the message to be shown

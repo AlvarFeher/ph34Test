@@ -17,6 +17,7 @@ public class CombatantManager {
     private final CharacterManager characterManager;
     private final MonsterManager monsterManager;
 
+
     /**
      * constructor
      */
