@@ -238,9 +238,9 @@ public class CharacterJsonDAO implements CharacterDAO {
     public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass){
         switch(charClass){
             case "Adventurer":
-               return  new Adventurer(name, player, xp, body, mind, spirit, charClass);
+                return  new Adventurer(name, player, xp, body, mind, spirit, charClass);
             case "Warrior":
-               return  new Warrior( name, player, xp, body, mind, spirit, charClass);
+                return  new Warrior( name, player, xp, body, mind, spirit, charClass);
             case "Champion":
                 return  new Champion(name, player, xp, body, mind, spirit, charClass);
             case "Cleric":

@@ -293,12 +293,11 @@ public class UIController {
                 }
 
                 //preparation_stage
-
                 consoleUI.printPreparationStageTitle();
-                consoleUI.printSelfMotivation(characterManager.getPartyNames(parties_inx));
 
                 //adding attribute bonus to party members from preparation stage actions
                 adventureManager.updatePartyInPrepStage(currentAdventure, parties_inx);
+                consoleUI.showPrepStageActions(adventureManager.getCharactersFromParty(currentAdventure));
 
                 List<Combatant> combatants = combatantManager.rollInitiative(characterManager.getPartyNames(parties_inx), adventureManager.getMonsterNamesInEncounterUnfiltered(i, currentAdventure));
                 consoleUI.showRollingInitiative(combatantManager.getNames(combatants), combatantManager.getInitValues(combatants));
@@ -310,11 +309,12 @@ public class UIController {
                     consoleUI.showTPU();
                     run();
                 }
+
                 //short rest stage
                 shortRestStageXp(parties_inx, currentAdventure, xp_gain);  // gain xp
                 adventureManager.updatePartyInShortRestStage(currentAdventure,parties_inx); // character actions
+                consoleUI.showShortRestActions(adventureManager.getCharactersFromParty(currentAdventure));
             }
-
 
             consoleUI.showPartyCompleteAdventure(currentAdventure);
             adventureManager.resetAdventure(adventure_copy);
@@ -356,7 +356,6 @@ public class UIController {
                             party = adventureManager.applyDamageOnAllParty(actionValue*rollDiced,currentAdventure,damageType);
                         }else{
                             party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx, damageType);
-
                         }
                         if (party == null) {
                             return;
@@ -376,7 +375,7 @@ public class UIController {
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure, c.getName());
                         if(p == null){
-                            System.out.println("\n***************************  p is null \n");
+                            //System.out.println("\n***************************  p is null \n");
                         }
                         if (p != null) {
 

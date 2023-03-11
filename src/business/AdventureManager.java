@@ -270,7 +270,6 @@ public class AdventureManager {
         // in this phase we only work with adventurer class therefore, the update is +1 in spirit
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = new ArrayList<>();
-
         for (int i=0;i< parties_inx.length;i++) {
             Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
             parties = character.preparationStageAction(adventure.getParties(),character.getName(),characterJsonDao);
@@ -946,7 +945,7 @@ public class AdventureManager {
                 count++;
             }
         }
-        System.out.println("current alive monsters: "+count +"\n");
+       // System.out.println("current alive monsters: "+count +"\n");
         return count;
     }
 
@@ -978,6 +977,15 @@ public class AdventureManager {
         for(Monster m: encounters.get(encounterIndex) ){
             System.out.println("name: "+m.getName()+"  hp: "+m.getHitPoints());
         }
+    }
+
+    public List<Character> getCharactersFromParty(String currentAdventure){
+        Adventure a = adventureJsonDAO.getAdventureByName(currentAdventure);
+        List<Character> finalList = new ArrayList<>();
+        for (Party p: a.getParties()){
+            finalList.add(p.getCharacter(characterJsonDao));
+        }
+        return finalList;
     }
 
 

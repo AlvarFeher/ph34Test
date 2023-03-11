@@ -1,5 +1,6 @@
 package business.entities;
 
+import business.CharacterManager;
 import persistence.JSON.CharacterJsonDAO;
 
 /**

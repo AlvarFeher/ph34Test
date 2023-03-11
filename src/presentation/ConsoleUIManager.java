@@ -1,6 +1,10 @@
 package presentation;
 
 
+import business.entities.Character;
+import business.entities.Classes.Wizard;
+import business.entities.Party;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
@@ -288,6 +292,7 @@ public class ConsoleUIManager {
     public String askInitialClass(){
         String init_class;
         init_class = getStringValue("-> Enter the character’s initial class [Adventurer, Cleric, Wizard]:");
+
         switch (init_class) {
             case "Adventurer" : return "Adventurer";
             case "Cleric" : return "Cleric";
@@ -987,6 +992,53 @@ public class ConsoleUIManager {
         }
         System.out.println("and "+targets[targets.length-1]);
     }
+
+    // FIXME THIS SHOULD RETURN THE RIGHT VALUES
+    public void showPrepStageActions(List<Character> party){
+        int paladinValue = (int)Math.floor(Math.random() * (3) + 1);
+
+        for (Character c: party){
+            if(Objects.equals(c.getCharClass(), "Adventurer") || Objects.equals(c.getCharClass(), "Warrior")){
+                System.out.println(c.getName()+" uses Self-Motivated. Their Spirit increases in +1.");
+            }
+            if(Objects.equals(c.getCharClass(), "Champion")){
+                System.out.println(c.getName()+" uses Motivational Speech. Everyone's Spirit increases in +1.");
+            }
+            if(Objects.equals(c.getCharClass(), "Cleric")){
+                System.out.println(c.getName()+" uses Prayer Of Good Luck. Everyone's Mind increases in +1");
+            }
+            if(Objects.equals(c.getCharClass(), "Paladin")){
+                System.out.println(c.getName()+" uses Blessing Of Good Luck. Everyone's Mind increases in "+paladinValue);
+            }
+            if(Objects.equals(c.getCharClass(), "Wizard")){
+                int wizardShield = 24; // (Wizard) c.getShield()
+                System.out.println(c.getName()+" uses Mage Shield. Shield recharges to "+ wizardShield);
+            }
+        }
+    }
+
+    // FIXME THIS SHOULD RETURN THE RIGHT VALUES
+    public void showShortRestActions(List<Character> party){
+        for(Character c: party){
+            if(Objects.equals(c.getCharClass(), "Adventurer") || Objects.equals(c.getCharClass(), "Warrior")){
+                System.out.println(c.getName()+" uses Bandage Time. Heals 0 hit points.");
+            }
+            if(Objects.equals(c.getCharClass(), "Champion")){
+                System.out.println(c.getName()+" uses Improved Bandage Time. Heals 0 hit points.");
+            }
+            if(Objects.equals(c.getCharClass(), "Cleric")){
+                System.out.println(c.getName()+" uses Prayer Of Healing. Heals 0 hit points");
+            }
+            if(Objects.equals(c.getCharClass(), "Paladin")){
+                System.out.println(c.getName()+" uses Prayer Of Mass Healing. Heals 0 hit points ");
+            }
+            if(Objects.equals(c.getCharClass(), "Wizard")){
+                System.out.println(c.getName()+" is reading a book.");
+            }
+        }
+    }
+
+
 
 
 
