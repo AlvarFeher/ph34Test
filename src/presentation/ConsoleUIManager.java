@@ -958,6 +958,28 @@ public class ConsoleUIManager {
     }
 
 
+    public void showFireballAttack(int damage, List<String> monsterNames, String attackerName){
+        System.out.print(attackerName+ " attacks ");
+        for (int i =0; i < monsterNames.size()-1; i++){
+            System.out.print(monsterNames.get(i)+", ");
+        }
+        System.out.println("and "+monsterNames.get(monsterNames.size()-1)+" with Fireball.");
+        System.out.println("Hits and deals "+damage+" magical damage.");
+    }
+
+    public void showClericHeal(String clericName, int heal, String target){
+        System.out.println(clericName + " uses Prayer of Healing. Heals "+heal+" hit points to "+target);
+    }
+
+    public void showPaladinHeal(String paladinName, int heal, String[] targets){
+        System.out.print(paladinName+ " uses prayer of Mass Healing. Heals "+heal+" hit points to ");
+        for (int i =0; i <targets.length-1; i++){
+            System.out.print(targets[i]+", ");
+        }
+        System.out.println("and "+targets[targets.length-1]);
+    }
+
+
 
 
 }

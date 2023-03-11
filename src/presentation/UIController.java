@@ -349,8 +349,8 @@ public class UIController {
                         // we are considering both healing and damage value as the same
                         actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos), adventureManager.checkPartyHalfHp(currentAdventure));
 
-                        System.out.println("**********TEST**********+");
-                        adventureManager.testPrint(currentAdventure, encounter_pos);
+                        //System.out.println("**********TEST**********+");
+                       // adventureManager.testPrint(currentAdventure, encounter_pos);
 
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure, c.getName());
@@ -371,25 +371,30 @@ public class UIController {
 
                         // fireball to all alive monsters
                         if ((adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
+                            List<String> monsterNames = adventureManager.getMonsterNamesInEncounterUnfiltered(encounter_pos,currentAdventure);
+                            consoleUI.showFireballAttack(actionValue,monsterNames,ch.getName());
                             adventureManager.applyDamageOnAllMonsters(actionValue, currentAdventure, encounter_pos,attackType);
-                            System.out.println("FIREBALL");
                         }
 
                         // heal a character
                         else if (ch instanceof Cleric && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
-                            adventureManager.applyHealOnCharacter(actionValue, currentAdventure, max_hit_points);
-                            System.out.println("cleric heals");
+                           String target =  adventureManager.applyHealOnCharacter(actionValue, currentAdventure, max_hit_points);
+                            consoleUI.showClericHeal(ch.getName(), actionValue,target);
+                            //System.out.println("cleric heals");
                         }
 
                         // heal all party members
                         else if (ch instanceof Paladin && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
                             adventureManager.applyHealOnParty(actionValue, currentAdventure);
-                            System.out.println("paladin heals");
+                            String[] partyNames = characterManager.getPartyNames(parties_inx);
+                            consoleUI.showPaladinHeal(ch.getName(),actionValue,partyNames);
+                            //System.out.println("paladin heals");
+
                         } else {  // attacks to a random monster
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
                             consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
                         }
-                        adventureManager.testPrint(currentAdventure, encounter_pos);
+                       // adventureManager.testPrint(currentAdventure, encounter_pos);
                     }
                     }
                 }
@@ -411,9 +416,5 @@ public class UIController {
         String[] party_names = characterManager.getPartyNames(parties_inx);
         List<Integer> lvl_increase = adventureManager.gainXp(adventure_name, xp_gain, parties_inx);
         consoleUI.showXpGaining(party_names, xp_gain, lvl_increase);
-
-       // int[] bandage_time = adventureManager.takeHealingActionCharacter(adventure_name, party_names);
-        //List<Integer> is_healed =  adventureManager.healParty(adventure_name, bandage_time, parties_inx);
-       // consoleUI.showHealingTime(party_names, bandage_time, is_healed);
     }
 }
