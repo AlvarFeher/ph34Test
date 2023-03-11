@@ -329,9 +329,14 @@ public class UIController {
                 if (adventureManager.isCombatantMonster(currentAdventure, encounter_pos, c.getName())) {
                     if (adventureManager.isMonsterAlive(currentAdventure, encounter_pos, c.getName())) {
                         actionValue = adventureManager.takeAttackActionMonster(currentAdventure, encounter_pos, c.getName());
-
                         damageType = monsterManager.getDamageTypeOfMonster(c.getName());
-                        String party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx, damageType);
+                        String party;
+                        if(adventureManager.isMonsterBoss(c.getName())){
+                            party = adventureManager.applyDamageOnAllParty(actionValue*rollDiced,currentAdventure,damageType);
+                        }else{
+                            party = adventureManager.applyDamageOnRandomConsciousParty(actionValue * rollDiced, currentAdventure, parties_inx, damageType);
+
+                        }
                         if (party == null) {
                             return;
                         }
@@ -366,7 +371,7 @@ public class UIController {
 
                         // fireball to all alive monsters
                         if ((adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos) > 3 && ch instanceof Wizard) && !adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
-                            adventureManager.applyDamageOnAllMonsters(actionValue, currentAdventure, encounter_pos);
+                            adventureManager.applyDamageOnAllMonsters(actionValue, currentAdventure, encounter_pos,attackType);
                             System.out.println("FIREBALL");
                         }
 

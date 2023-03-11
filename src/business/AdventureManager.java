@@ -7,6 +7,7 @@ import persistence.AdventureDAO;
 import persistence.AdventureDAO;
 import persistence.JSON.AdventureJsonDAO;
 import persistence.JSON.CharacterJsonDAO;
+import persistence.JSON.MonstersJsonDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class AdventureManager {
     private final CharacterManager characterManager;
     private final AdventureDAO adventureJsonDAO;
     private final CharacterJsonDAO characterJsonDao;
+    private final MonstersJsonDAO monstersJsonDAO;
 
     /**
      * constructor
@@ -29,6 +31,7 @@ public class AdventureManager {
         adventureJsonDAO = new AdventureJsonDAO();
         characterManager = new CharacterManager();
         characterJsonDao = new CharacterJsonDAO();
+        monstersJsonDAO = new MonstersJsonDAO();
     }
 
     /**
@@ -406,8 +409,101 @@ public class AdventureManager {
 
     // FIXME
     // attack from Boss Monster
-    private void attackAllConsciousCharacters(){
+    public String applyDamageOnAllParty(int damage, String currentAdventure, String damageType){
+        if (adventureJsonDAO.arePartyAllUnconscious(currentAdventure)) {
+            return null;
+        }
+        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure newAdventure;
+        List<Party> characters = adventureJsonDAO.getPartyByName(currentAdventure);
+        List<Party> parties = new ArrayList<>();
+        int i=0;
+        boolean unconscious = false;
+        for(Party p:characters){
+            if(characters.get(i).getCharacter(characterJsonDao) instanceof Warrior || characters.get(i).getCharacter(characterJsonDao) instanceof Champion ){
+                if(Objects.equals(damageType, "Physical")){
+                    if(characters.get(i).getHitPoint() - damage/2 > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                    }else{
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        unconscious = true;
+                    }
+                }else{
+                    if(characters.get(i).getHitPoint() - damage > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                    }else{
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        unconscious = true;
+                    }
+                }
+            }
 
+            if(characters.get(i).getCharacter(characterJsonDao) instanceof Paladin){
+                if(Objects.equals(damageType, "Psychical")){
+                    if(characters.get(i).getHitPoint() - damage/2 > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                    }else{
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        unconscious = true;
+                    }
+                }else{
+                    if(characters.get(i).getHitPoint() - damage > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                    }else{
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        unconscious = true;
+                    }                        }
+            }
+
+            if(characters.get(i).getCharacter(characterJsonDao) instanceof Wizard){
+                int damageTaken = damage -  characterManager.xpToLevel(characters.get(i).getCharacter(characterJsonDao).getXp());
+                int shield = ((Wizard) characters.get(i).getCharacter(characterJsonDao)).getShield();
+                if(Objects.equals(damageType, "Magical")){
+                    if(shield > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao));
+                    }else{
+                        if(characters.get(i).getHitPoint() - damageTaken > 0){
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao));
+                        }else{
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            unconscious = true;
+                        }
+                    }
+                }else{
+                    if(shield > 0){
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao));
+                    }else{
+                        if(characters.get(i).getHitPoint() - damage > 0){
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                        }else{
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            unconscious = true;
+                        }
+                    }
+                }
+            }
+            if(characters.get(i).getCharacter(characterJsonDao) instanceof Adventurer || characters.get(i).getCharacter(characterJsonDao) instanceof Cleric){
+                if(characters.get(i).getHitPoint() - damage > 0){
+                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                }else{
+                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                    unconscious = true;
+                }
+            }
+
+            i++;
+        }
+
+        newAdventure =  new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
+        adventureJsonDAO.update(newAdventure);
+        for(Party p : parties){
+            if(p.getHitPoint() > 0){ // character is conscious
+                return p.getCharacter(characterJsonDao).getName();
+            }else{
+                return p.getCharacter(characterJsonDao).getName() + " falls unconscious";
+            }
+        }
+        return "";
     }
 
     /**
@@ -470,7 +566,6 @@ public class AdventureManager {
                             }                        }
                     }
 
-                    // TODO: EL DAMAGE DEL BOSS Y SHIELD DEL WIZARD: shield done
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Wizard){
                         int damageTaken = damage -  characterManager.xpToLevel(characters.get(i).getCharacter(characterJsonDao).getXp());
                         int shield = ((Wizard) characters.get(i).getCharacter(characterJsonDao)).getShield();
@@ -520,6 +615,16 @@ public class AdventureManager {
         else {
             return characters.get(party_pos).getCharacter(characterJsonDao).getName();
         }
+    }
+
+    public boolean isMonsterBoss(String name){
+        List<Monster> monsters = monstersJsonDAO.getAll();
+        for(Monster m : monsters){
+            if(Objects.equals(m.getName(), name)){
+                return Objects.equals(m.getChallenge(), "Boss");
+            }
+        }
+        return false;
     }
 
     /**
@@ -623,17 +728,29 @@ public class AdventureManager {
         }
     }
 
-    //FIXME: we'll have to add the damage reduction of bosses !!
-    public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos){
+
+
+    public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos, String attackType){
 
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
-
         for(Monster m: monsters){
             String damage_dice = "d" + m.getDamageDice();
-            Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage,m.getInitiative(),damage_dice,m.getDamageType());
-            new_monsters.add(newMonster);
+            if(Objects.equals(m.getChallenge(), "Boss")){
+                if(Objects.equals(m.getDamageType(), attackType)){
+                    Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage/2,m.getInitiative(),damage_dice,m.getDamageType());
+                    new_monsters.add(newMonster);
+                }else {
+                    Monster newMonster = new Monster(m.getName(), m.getChallenge(), m.getExperience(), m.getHitPoints() - damage, m.getInitiative(), damage_dice, m.getDamageType());
+                    new_monsters.add(newMonster);
+                }
+
+            }else{
+                Monster newMonster = new Monster(m.getName(),m.getChallenge(),m.getExperience(),m.getHitPoints()-damage,m.getInitiative(),damage_dice,m.getDamageType());
+                new_monsters.add(newMonster);
+            }
+
         }
 
         List<List<Monster>> encounters = new ArrayList<>();
@@ -679,7 +796,6 @@ public class AdventureManager {
             //update adventure with character healed
             Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao);
             new_parties.add(newParty);
-            i++;
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
         adventureJsonDAO.update(new_adventure);
