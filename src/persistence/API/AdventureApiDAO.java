@@ -70,8 +70,9 @@ public class AdventureApiDAO implements AdventureDAO {
         try {
             String s = apiHelper.getFromUrl(base_url + "?name="+str);
             Gson gson = new Gson();
-            Type type = new TypeToken<Adventure>() {}.getType();
-            return gson.fromJson(s , type);
+            Type type = new TypeToken<List<Adventure>>() {}.getType();
+            List<Adventure> list = gson.fromJson(s, type);
+            return list.get(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,7 +97,8 @@ public class AdventureApiDAO implements AdventureDAO {
 
     @Override
     public void update(Adventure adventure) {
-
+        deleteByName(adventure.getName());
+        add(adventure);
     }
 
     @Override

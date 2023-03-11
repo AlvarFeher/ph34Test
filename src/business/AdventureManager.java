@@ -3,6 +3,7 @@ package business;
 import business.entities.*;
 import business.entities.Character;
 import business.entities.Classes.*;
+import persistence.API.AdventureApiDAO;
 import persistence.AdventureDAO;
 import persistence.AdventureDAO;
 import persistence.JSON.AdventureJsonDAO;
@@ -21,8 +22,20 @@ public class AdventureManager {
 
     private final CharacterManager characterManager;
     private final AdventureDAO adventureJsonDAO;
+    private final AdventureDAO adventureApiDAO;
     private final CharacterJsonDAO characterJsonDao;
     private final MonstersJsonDAO monstersJsonDAO;
+    private boolean local;
+
+    public boolean isLocal() {
+        return local;
+    }
+
+    public void setLocal(boolean local) {
+        this.local = local;
+    }
+
+
 
     /**
      * constructor
@@ -32,6 +45,7 @@ public class AdventureManager {
         characterManager = new CharacterManager();
         characterJsonDao = new CharacterJsonDAO();
         monstersJsonDAO = new MonstersJsonDAO();
+        adventureApiDAO = new AdventureApiDAO();
     }
 
     /**
@@ -40,9 +54,18 @@ public class AdventureManager {
      * @return true if the name is unique, false otherwise
      */
     public boolean isAdventureNameUnique(String adventure_name) {
-        for (Adventure a: adventureJsonDAO.getAll()){
-            if (Objects.equals(a.getName(), adventure_name)){
-                return false;
+        if (isLocal()) {
+            for (Adventure a : adventureJsonDAO.getAll()) {
+                if (Objects.equals(a.getName(), adventure_name)) {
+                    return false;
+                }
+            }
+        }
+        else {
+            for (Adventure a : adventureApiDAO.getAll()) {
+                if (Objects.equals(a.getName(), adventure_name)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -55,7 +78,13 @@ public class AdventureManager {
      * @return all monsters in a specific encounter of a specific adventure
      */
     public List<String> getMonsterNamesInEncounter(int i, String adventure_name) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        Adventure adventure;
+        if (isLocal()) {
+             adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(adventure_name);
+        }
         if (adventure == null) {
             return new ArrayList<>(0);
         }
@@ -86,7 +115,14 @@ public class AdventureManager {
      * @return how many monsters of name given in the parameter are there in the encounter
      */
     public int occurrenceMonsterInEncounter(int i, String adventure_name, String monster) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        }
+        else{
+            adventure = adventureApiDAO.getAdventureByName(adventure_name);
+        }
+
         if (adventure == null) {
             return 0;
         }
@@ -118,7 +154,13 @@ public class AdventureManager {
      * @return false if the monster to be added is a boss difficulty, and we already have in the system (amount of 1). true otherwise
      */
     public boolean canMonsterBeAdded(String currentMonster, int monsterAmount, int currentEncounter) {
-        List<Adventure> adventures = adventureJsonDAO.getAll();
+        List<Adventure> adventures ;
+        if (isLocal()) {
+            adventures = adventureJsonDAO.getAll();
+        }
+        else {
+            adventures = adventureApiDAO.getAll();
+        }
         for (Adventure adventure:adventures) {
             if (Objects.equals(adventure.getName(), currentMonster)) {
                 for (int i=0;i < adventure.getEncounters().get(currentEncounter-1).size();i++) {
@@ -139,7 +181,13 @@ public class AdventureManager {
      * @param monstersToAdd monsters to be added in the encounter of the adventure
      */
     public void updateAdventure(String adventure_name, int i, List<Monster> monstersToAdd) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        }
+        else{
+            adventure = adventureApiDAO.getAdventureByName(adventure_name);
+        }
         List<Monster> monsters = adventure.getEncounters().get(i);
         monsters.addAll(monstersToAdd);
         List<List<Monster>> new_monsters = new ArrayList<>(adventure.getNum_encounters());
@@ -155,7 +203,12 @@ public class AdventureManager {
             }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), new_monsters);
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }
+        else {
+            adventureApiDAO.update(new_adventure);
+        }
     }
 
 
@@ -170,7 +223,11 @@ public class AdventureManager {
             list.add(new ArrayList<>());
         }
         Adventure adventure = new Adventure(adventure_name, encountering_num, list);
-        adventureJsonDAO.add(adventure);
+        if (isLocal()) {
+            adventureJsonDAO.add(adventure);
+        } else {
+            adventureApiDAO.add(adventure);
+        }
     }
 
     /**
@@ -180,7 +237,13 @@ public class AdventureManager {
      * @param monster_name the monster to be deleted
      */
     public void deleteMonster(String adventure_name, int encounterIndex, String monster_name){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(adventure_name);
+        }
         List<List<Monster>> new_monsters = new ArrayList<>(adventure.getNum_encounters());
         List<Monster> monsters = adventure.getEncounters().get(encounterIndex);
         List<Monster> monsters_updated =new ArrayList<>();
@@ -201,7 +264,11 @@ public class AdventureManager {
             }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), new_monsters);
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }else {
+            adventureApiDAO.update(new_adventure);
+        }
     }
 
 
@@ -834,7 +901,10 @@ public class AdventureManager {
      * @return the number of adventures
      */
     public int getSize() {
-        return adventureJsonDAO.getAdventuresSize();
+        if (isLocal()) {
+            return adventureJsonDAO.getAdventuresSize();
+        }
+        return adventureApiDAO.getAdventuresSize();
     }
 
     /**

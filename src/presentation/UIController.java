@@ -51,7 +51,7 @@ public class UIController {
     private void loadAndConnect() {
         consoleUI.loadData();
         if (isLocal) {
-            monsterManager.setIs_local(true);
+            monsterManager.setIsLocal(true);
             if (monsterManager.loadMonsters() == null) {
                 consoleUI.showLoadingError(false, true);
             } else {
@@ -64,12 +64,12 @@ public class UIController {
             if (monsterManager.loadMonsters() == null) {
                 consoleUI.showLoadingError(false, false);
                 isLocal = true;
-                monsterManager.setIs_local(true);
+                monsterManager.setIsLocal(true);
                 loadAndConnect();
             } else {
                 consoleUI.showLoadingError(true, false);
                 isLocal = false;
-                monsterManager.setIs_local(false);
+                monsterManager.setIsLocal(false);
                 run();
             }
         }
@@ -80,6 +80,7 @@ public class UIController {
      */
     private void run() {
         characterManager.setLocal(isLocal);
+        adventureManager.setLocal(isLocal);
 
         int characterCount = characterManager.getCharacterCount();
 
