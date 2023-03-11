@@ -361,7 +361,7 @@ public class UIController {
                         if (party == null) {
                             return;
                         }
-                        consoleUI.showAttackAction(0, c.getName(), party, rollDiced, actionValue * rollDiced,"physical");
+                        consoleUI.showAttackAction(adventureManager.getCharactersFromParty(currentAdventure),null,adventureManager.isMonsterBoss(c.getName()),0, c.getName(), party, rollDiced, actionValue * rollDiced,"physical");
                     }
                 }
                 else {
@@ -413,7 +413,7 @@ public class UIController {
 
                         } else {  // attacks to a random monster
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
-                            consoleUI.showAttackAction(1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
+                            consoleUI.showAttackAction(null,ch.getCharClass(),false,1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
                         }
                        // adventureManager.testPrint(currentAdventure, encounter_pos);
                     }

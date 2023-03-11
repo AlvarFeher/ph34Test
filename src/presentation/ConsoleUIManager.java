@@ -3,6 +3,7 @@ package presentation;
 
 import business.entities.Character;
 import business.entities.Classes.Wizard;
+import business.entities.Monster;
 import business.entities.Party;
 
 import java.util.List;
@@ -847,13 +848,22 @@ public class ConsoleUIManager {
      * @param rollDiced if the attack is a fail or a hit or a critical hit
      * @param damage the damage that the combatant being attacked will get
      */
-    public void showAttackAction(int monster_or_party, String s, String s2, int rollDiced, int damage, String damageType) {
+    public void showAttackAction(List<Character> partyNames,String attackerCh,boolean isMonsterBoss, int monster_or_party, String s, String s2, int rollDiced, int damage, String damageType) {
         //monster attacks party
         if (monster_or_party == 0) {
             String new_string;
             if (s2.contains(" falls unconscious")) {
                 new_string = s2.replace(" falls unconscious", "");
-                System.out.println(s + " attacks " + new_string + ".");
+                if(isMonsterBoss){
+                    System.out.print(s+ "(Boss) attacks ");
+                    for (int i = 0; i < partyNames.size()-1; i++) {
+                        System.out.print(partyNames.get(i).getName()+" ,");
+                    }
+                    System.out.println(" and "+partyNames.get(partyNames.size()-1).getName());
+                }else{
+                    System.out.println(s + " attacks " + new_string + ".");
+                }
+
                 if (damage != Integer.MIN_VALUE) {
                     switch (rollDiced) {
                         case 0 -> System.out.println("Fails and deals 0 physical damage.");
@@ -890,9 +900,24 @@ public class ConsoleUIManager {
                 if (s2.isEmpty()) {
                     return;
                 }
-                System.out.println(s + " attacks " + s2 + " with Sword slash.");
+                if(Objects.equals(attackerCh, "Adventurer")){
+                    System.out.println(s + " attacks " + s2 + " with Sword slash.");
+                }
+                if(Objects.equals(attackerCh, "Warrior")|| Objects.equals(attackerCh, "Champion")){
+                    System.out.println(s + " attacks " + s2 + " with Improved Sword slash.");
+                }
+                if(Objects.equals(attackerCh, "Cleric")){
+                    System.out.println(s + " attacks " + s2 + " with Not On My Watch.");
+                }
+                if(Objects.equals(attackerCh, "Paladin")){
+                    System.out.println(s + " attacks " + s2 + " with Never On My Watch.");
+                }
+                if(Objects.equals(attackerCh, "Wizard")){
+                    System.out.println(s + " attacks " + s2 + " with Arcane Missile.");
+                }
+
                 switch (rollDiced) {
-                    case 0 -> System.out.println("Fails and deals"+damageType+" damage.");
+                    case 0 -> System.out.println("Fails and deals "+damageType+" damage.");
                     case 1 -> System.out.println("Hits and deals " + damage + " "+damageType+" damage.\n");
                     case 2 -> System.out.println("Critical hit and deals" + damage +" "+damageType+" damage.\n");
                 }
