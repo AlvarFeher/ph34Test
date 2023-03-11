@@ -728,10 +728,7 @@ public class AdventureManager {
         }
     }
 
-
-
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos, String attackType){
-
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
@@ -768,23 +765,26 @@ public class AdventureManager {
     }
 
     // should only heal a single character
-    public void applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
+    public String applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
         Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
         int flag =0;
+        String target = "";
         for (int i=0; i < parties.size(); i++){
             if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2 && flag == 0){
                 //update adventure with character healed
                 Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao);
                 new_parties.add(newParty);
                 flag = 1;
+                target =  newParty.getCharacter(characterJsonDao).getName();
             }else {
                 new_parties.add(parties.get(i));
             }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
         adventureJsonDAO.update(new_adventure);
+        return target;
     }
 
     public void applyHealOnParty(int heal, String currentAdventure){
@@ -887,12 +887,16 @@ public class AdventureManager {
             else {
                 list.add(characterManager.xpToLevel(xp));
             }
-            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+
+            int level = characterManager.xpToLevel(character.getXp()); // calculate character level
+            String finalClass = characterManager.levelToClass(level,character.getCharClass()); // get class according to character level
+
+            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), finalClass);
+
             Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint(),characterJsonDao);
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-
         adventureJsonDAO.update(new_adventure);
         return list;
     }

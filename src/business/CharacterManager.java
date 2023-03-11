@@ -84,7 +84,7 @@ public class CharacterManager {
 
     public String levelToClass(int level, String initialClass) {
         String finalClass = "";
-        if(Objects.equals(initialClass, "Adventurer")){
+        if(Objects.equals(initialClass, "Adventurer") || Objects.equals(initialClass, "Warrior") || Objects.equals(initialClass, "Champion") ){
             if (level < 4 && level > 0) {
                 finalClass = "Adventurer";
             } else if (level < 8 && level > 3) {
@@ -92,7 +92,7 @@ public class CharacterManager {
             } else if (level <= 10 && level > 7) {
                 finalClass = "Champion";
             }
-        } else if (Objects.equals(initialClass, "Cleric")) {
+        } else if (Objects.equals(initialClass, "Cleric") || Objects.equals(initialClass, "Paladin")) {
             if (level > 0 && level < 5) {
                 finalClass = "Cleric";
             } else {
