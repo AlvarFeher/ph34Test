@@ -23,14 +23,14 @@ public class MonsterManager {
 
     private final MonsterDAO monsterJsonDAO;
     private final MonsterDAO monsterApiDAO;
-    private boolean is_local;
+    private boolean local;
 
-    public boolean isIt_local() {
-        return is_local;
+    public boolean isLocal() {
+        return local;
     }
 
-    public void setIs_local(boolean is_local) {
-        this.is_local = is_local;
+    public void setIsLocal(boolean is_local) {
+        this.local = is_local;
     }
 
     /**
@@ -46,7 +46,7 @@ public class MonsterManager {
      * @return a list of monsters
      */
     public List<Monster> loadMonsters() {
-        if (isIt_local()) {
+        if (isLocal()) {
             return monsterJsonDAO.getAll();
         }else {
             return monsterApiDAO.getAll();
@@ -89,7 +89,13 @@ public class MonsterManager {
      * @return true if monster is boss, false otherwise
      */
     public boolean isMonsterBoss(String currentMonsterName) {
-        List<Monster> monsters = monsterJsonDAO.getAll();
+        List<Monster> monsters;
+        if (isLocal()) {
+            monsters = monsterJsonDAO.getAll();
+        }
+        else {
+            monsters = monsterApiDAO.getAll();
+        }
         for (Monster monster: monsters) {
             if (Objects.equals(monster.getName(), currentMonsterName)) {
                 if (Objects.equals(monster.getChallenge(), "Boss")) {
@@ -106,8 +112,15 @@ public class MonsterManager {
      */
     public List<String> getAllMonstersName() {
         List<String> names = new ArrayList<>();
-        for (int i=0;i<monsterJsonDAO.getAll().size();i++) {
-            names.add(monsterJsonDAO.getAll().get(i).getName());
+        if (isLocal()) {
+            for (int i = 0; i < monsterJsonDAO.getAll().size(); i++) {
+                names.add(monsterJsonDAO.getAll().get(i).getName());
+            }
+        }
+        else {
+            for (int i = 0; i < monsterApiDAO.getAll().size(); i++) {
+                names.add(monsterApiDAO.getAll().get(i).getName());
+            }
         }
         return names;
     }
@@ -118,8 +131,15 @@ public class MonsterManager {
      */
     public List<String> getAllMonstersChallenges() {
         List<String> challenges = new ArrayList<>();
-        for (int i=0;i<monsterJsonDAO.getAll().size();i++) {
-            challenges.add(monsterJsonDAO.getAll().get(i).getChallenge());
+        if (isLocal()) {
+            for (int i = 0; i < monsterJsonDAO.getAll().size(); i++) {
+                challenges.add(monsterJsonDAO.getAll().get(i).getChallenge());
+            }
+        }
+        else {
+            for (int i = 0; i < monsterApiDAO.getAll().size(); i++) {
+                challenges.add(monsterApiDAO.getAll().get(i).getChallenge());
+            }
         }
         return challenges;
     }
