@@ -2,6 +2,10 @@ package presentation;
 
 
 import business.entities.Character;
+import business.entities.Classes.Paladin;
+import business.entities.Classes.Wizard;
+import business.entities.Monster;
+import business.entities.Party;
 
 import java.util.List;
 import java.util.Objects;
@@ -830,7 +834,7 @@ public class ConsoleUIManager {
      * @param max_hit_points the total hit points of all the characters in the encounter
      */
     public void showRoundCombatStage(int i, String[] partyNames, List<Integer> hit_points, List<Integer> max_hit_points) {
-        System.out.println("Round "+  ++i +":\nParty:");
+        System.out.println("Round "+ ++i +":\nParty:");
         for (int j=0;j<partyNames.length;j++) {
             System.out.print("\t- "+ partyNames[j] + " \t" + hit_points.get(j) + " / "+max_hit_points.get(j)+" hit points\n");
         }
@@ -871,7 +875,15 @@ public class ConsoleUIManager {
                 System.out.println(s2 + "\n");
             }
             else {
-                System.out.println(s + " attacks " + s2 + ".");
+                if(isMonsterBoss){
+                    System.out.print(s+ "(Boss) attacks ");
+                    for (int i = 0; i < partyNames.size()-1; i++) {
+                        System.out.print(partyNames.get(i).getName()+" ,");
+                    }
+                    System.out.println(" and "+partyNames.get(partyNames.size()-1).getName());
+                }else{
+                    System.out.println(s + " attacks " + s2 + ".");
+                }
                 switch (rollDiced) {
                     case 0 -> System.out.println("Fails and deals 0 physical damage.\n");
                     case 1 -> System.out.println("Hits and deals " + damage + " physical damage.\n");
@@ -886,7 +898,7 @@ public class ConsoleUIManager {
                 System.out.println(s + " attacks " + s2.replace(" dies" , "") + ".");
                 if (damage != Integer.MIN_VALUE) {
                     switch (rollDiced) {
-                        case 0 -> System.out.println("Fails and deals "+damageType+" damage.");
+                        case 0 -> System.out.println("Fails and deals 0 "+damageType+" damage.");
                         case 1 -> System.out.println("Hits and deals " + damage + " "+damageType+" damage.\n");
                         case 2 -> System.out.println("Critical hit and deals " + damage +" "+damageType+" damage.\n");
                     }
@@ -1017,7 +1029,6 @@ public class ConsoleUIManager {
 
     // FIXME THIS SHOULD RETURN THE RIGHT VALUES
     public void showPrepStageActions(List<Character> party){
-        int paladinValue = (int)Math.floor(Math.random() * (3) + 1);
 
         for (Character c: party){
             if(Objects.equals(c.getCharClass(), "Adventurer") || Objects.equals(c.getCharClass(), "Warrior")){
@@ -1030,11 +1041,11 @@ public class ConsoleUIManager {
                 System.out.println(c.getName()+" uses Prayer Of Good Luck. Everyone's Mind increases in +1");
             }
             if(Objects.equals(c.getCharClass(), "Paladin")){
-                System.out.println(c.getName()+" uses Blessing Of Good Luck. Everyone's Mind increases in "+paladinValue);
+                System.out.println(c.getName()+" uses Blessing Of Good Luck. Everyone's Mind increases in "+  c.getTestPrepStage());
             }
             if(Objects.equals(c.getCharClass(), "Wizard")){
                 int wizardShield = 24; // (Wizard) c.getShield()
-                System.out.println(c.getName()+" uses Mage Shield. Shield recharges to "+ wizardShield);
+                System.out.println(c.getName()+" uses Mage Shield. Shield recharges to "+ c.getShield());
             }
         }
     }

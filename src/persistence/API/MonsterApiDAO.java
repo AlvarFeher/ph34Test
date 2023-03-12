@@ -27,7 +27,6 @@ public class MonsterApiDAO implements MonsterDAO {
     }
 
 
-
     /**
      * retrieve all the monsters that are stored in the cloud
      * @return a list of all the monsters in the cloud

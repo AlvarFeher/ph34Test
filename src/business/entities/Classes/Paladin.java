@@ -10,6 +10,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class Paladin extends Character {
+
+    private int testPrepStage;
+
+    public int getTestPrepStage() {
+        return testPrepStage;
+    }
+
     /**
      * constructor
      *
@@ -50,9 +57,10 @@ public class Paladin extends Character {
     @Override
     public List<Party> preparationStageAction(List<Party> party, String charName, CharacterDAO dao) {
         List<Party> newParty = new ArrayList<>();
+        this.testPrepStage = (int)Math.floor(Math.random() * (3) + 1);
         for(Party c: party){
             if(!Objects.equals(c.getCharacter(dao).getName(), charName)){
-                newParty.add(new Party(new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind()+(int)Math.floor(Math.random() * (3) + 1),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass()),c.getHitPoint(),dao));
+                newParty.add(new Party(new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind()+this.testPrepStage,c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass()),c.getHitPoint(),dao,0));
             }else
                 newParty.add(c);
         }
@@ -66,7 +74,7 @@ public class Paladin extends Character {
             int rand =(int)Math.floor(Math.random() * (8) + 1); // for now this is like adventurer/warrior
             if(Objects.equals(c.getCharacter(dao).getName(), charName)){
                 Character ca = new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass());
-                newParty.add(new Party(ca,c.getHitPoint()+rand,dao));
+                newParty.add(new Party(ca,c.getHitPoint()+rand,dao,0));
             }else
                 newParty.add(c);
         }

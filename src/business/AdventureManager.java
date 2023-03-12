@@ -349,7 +349,7 @@ public class AdventureManager {
 
         for (int i=0;i< parties_inx.length;i++) {
             Character c = characterList.get(i);
-            parties.add(new Party(characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass()), hit_points.get(i),characterJsonDao));
+            parties.add(new Party(characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass(),0), hit_points.get(i),characterJsonDao,0));
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
         if (isLocal()) {
@@ -386,6 +386,8 @@ public class AdventureManager {
             }
         }
     }
+
+
 
     public void updatePartyInShortRestStage(String currentAdventure, int[] parties_inx){
         Adventure adventure;
@@ -448,7 +450,7 @@ public class AdventureManager {
         for(Party p: parties){
             if(Objects.equals(p.getCharacter(characterJsonDao).getName(), name)){
                 Character c = p.getCharacter(characterJsonDao);
-                character = characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass());
+                character = characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass(),0);
 
                 damage = character.doAction() + character.doAction(needHealing,currentAliveMonsters);
             }
@@ -562,7 +564,7 @@ public class AdventureManager {
         }
     }
 
-    // FIXME
+
     // attack from Boss Monster
     public String applyDamageOnAllParty(int damage, String currentAdventure, String damageType){
         if (isLocal()) {
@@ -597,16 +599,16 @@ public class AdventureManager {
             if(characters.get(i).getCharacter(characterJsonDao) instanceof Warrior || characters.get(i).getCharacter(characterJsonDao) instanceof Champion ){
                 if(Objects.equals(damageType, "Physical")){
                     if(characters.get(i).getHitPoint() - damage/2 > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao,0));
                     }else{
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                         unconscious = true;
                     }
                 }else{
                     if(characters.get(i).getHitPoint() - damage > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                     }else{
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                         unconscious = true;
                     }
                 }
@@ -615,16 +617,16 @@ public class AdventureManager {
             if(characters.get(i).getCharacter(characterJsonDao) instanceof Paladin){
                 if(Objects.equals(damageType, "Psychical")){
                     if(characters.get(i).getHitPoint() - damage/2 > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao,0));
                     }else{
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                         unconscious = true;
                     }
                 }else{
                     if(characters.get(i).getHitPoint() - damage > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                     }else{
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                         unconscious = true;
                     }                        }
             }
@@ -634,23 +636,23 @@ public class AdventureManager {
                 int shield = ((Wizard) characters.get(i).getCharacter(characterJsonDao)).getShield();
                 if(Objects.equals(damageType, "Magical")){
                     if(shield > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao,0));
                     }else{
                         if(characters.get(i).getHitPoint() - damageTaken > 0){
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao,0));
                         }else{
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                             unconscious = true;
                         }
                     }
                 }else{
                     if(shield > 0){
-                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao));
+                        parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao,0));
                     }else{
                         if(characters.get(i).getHitPoint() - damage > 0){
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                         }else{
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                             unconscious = true;
                         }
                     }
@@ -658,9 +660,9 @@ public class AdventureManager {
             }
             if(characters.get(i).getCharacter(characterJsonDao) instanceof Adventurer || characters.get(i).getCharacter(characterJsonDao) instanceof Cleric){
                 if(characters.get(i).getHitPoint() - damage > 0){
-                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                 }else{
-                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                     unconscious = true;
                 }
             }
@@ -739,16 +741,16 @@ public class AdventureManager {
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Warrior || characters.get(i).getCharacter(characterJsonDao) instanceof Champion ){
                         if(Objects.equals(damageType, "Physical")){
                             if(characters.get(i).getHitPoint() - damage/2 > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao,0));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                 unconscious = true;
                             }
                         }else{
                             if(characters.get(i).getHitPoint() - damage > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                 unconscious = true;
                             }
                         }
@@ -757,16 +759,16 @@ public class AdventureManager {
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Paladin){
                         if(Objects.equals(damageType, "Psychical")){
                             if(characters.get(i).getHitPoint() - damage/2 > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage/2,characterJsonDao,0));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                 unconscious = true;
                             }
                         }else{
                             if(characters.get(i).getHitPoint() - damage > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                             }else{
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                 unconscious = true;
                             }                        }
                     }
@@ -776,23 +778,23 @@ public class AdventureManager {
                         int shield = ((Wizard) characters.get(i).getCharacter(characterJsonDao)).getShield();
                         if(Objects.equals(damageType, "Magical")){
                             if(shield > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damageTaken,characterJsonDao,0));
                             }else{
                                 if(characters.get(i).getHitPoint() - damageTaken > 0){
-                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao));
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damageTaken,characterJsonDao,0));
                                 }else{
-                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                     unconscious = true;
                                 }
                             }
                         }else{
                             if(shield > 0){
-                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao));
+                                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), shield - damage,characterJsonDao,0));
                             }else{
                                 if(characters.get(i).getHitPoint() - damage > 0){
-                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                                 }else{
-                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                                    parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                                     unconscious = true;
                                 }
                             }
@@ -801,15 +803,15 @@ public class AdventureManager {
 
                     if(characters.get(i).getCharacter(characterJsonDao) instanceof Adventurer || characters.get(i).getCharacter(characterJsonDao) instanceof Cleric){
                         if(characters.get(i).getHitPoint() - damage > 0){
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint() - damage,characterJsonDao,0));
                         }else{
-                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao));
+                            parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0));
                             unconscious = true;
                         }
                     }
             }
             else {
-                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint(),characterJsonDao));
+                parties.add(new Party(characters.get(i).getCharacter(characterJsonDao), characters.get(i).getHitPoint(),characterJsonDao,0));
             }
         }
         new_adventure =  new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
@@ -1023,7 +1025,7 @@ public class AdventureManager {
         for (int i=0; i < parties.size(); i++){
             if(parties.get(i).getHitPoint() < maxHitPoints.get(i)/2 && flag == 0){
                 //update adventure with character healed
-                Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao);
+                Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao,0);
                 new_parties.add(newParty);
                 flag = 1;
                 target =  newParty.getCharacter(characterJsonDao).getName();
@@ -1053,7 +1055,7 @@ public class AdventureManager {
         int i;
         for (i=0; i < parties.size() ; i++){
             //update adventure with character healed
-            Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao);
+            Party newParty = new Party(parties.get(i).getCharacter(characterJsonDao),parties.get(i).getHitPoint()+heal,characterJsonDao,0);
             new_parties.add(newParty);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
@@ -1176,9 +1178,9 @@ public class AdventureManager {
             int level = characterManager.xpToLevel(character.getXp()); // calculate character level
             String finalClass = characterManager.levelToClass(level,character.getCharClass()); // get class according to character level
 
-            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), finalClass);
+            Character new_character = characterJsonDao.assignClass(character.getName(), character.getPlayer(), xp, character.getBody(), character.getMind(), character.getSpirit(), finalClass,0);
 
-            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint(),characterJsonDao);
+            Party new_party = new Party(new_character, adventure.getParties().get(i).getHitPoint(),characterJsonDao,0);
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
@@ -1205,11 +1207,11 @@ public class AdventureManager {
             int hp = adventure.getParties().get(i).getHitPoint() + bandage_time[i];
             Party new_party;
             if (adventureJsonDAO.isPartyUnconsciousByPosition(adventure_name, i)) {
-                new_party = new Party(adventure.getParties().get(i).getCharacter(characterJsonDao), 0,characterJsonDao);
+                new_party = new Party(adventure.getParties().get(i).getCharacter(characterJsonDao), 0,characterJsonDao,0);
                 list.add(0);
             }
             else {
-                new_party = new Party(adventure.getParties().get(i).getCharacter(characterJsonDao), hp,characterJsonDao);
+                new_party = new Party(adventure.getParties().get(i).getCharacter(characterJsonDao), hp,characterJsonDao,0);
                 list.add(1);
             }
             parties.add(new_party);
