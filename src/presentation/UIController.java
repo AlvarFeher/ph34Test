@@ -38,7 +38,6 @@ public class UIController {
     public void startProgram() throws IOException {
         consoleUI.showLogo();
 
-        // todo: add persistence.API data option
         switch (consoleUI.showStorageMenuOptions()){
             case CLOUD -> isLocal = false;
             case LOCAL -> isLocal = true;
@@ -47,7 +46,9 @@ public class UIController {
         loadAndConnect();
     }
 
-
+    /**
+     * loads persistence data
+     */
     private void loadAndConnect() {
         consoleUI.loadData();
         if (isLocal) {

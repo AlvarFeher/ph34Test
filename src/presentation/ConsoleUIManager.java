@@ -291,6 +291,10 @@ public class ConsoleUIManager {
         System.out.println();
     }
 
+    /**
+     * ask for initial class of character during its creation
+     * @return initial class of character
+     */
     public String askInitialClass(){
         String init_class;
         boolean b;
@@ -1014,7 +1018,12 @@ public class ConsoleUIManager {
         System.out.println("\nCongratulations, your party completed \""+currentAdventure+"\"\n");
     }
 
-
+    /**
+     * show fireball attack damage to all enemies in encounter
+     * @param damage damage produced to each monster
+     * @param monsterNames list of monsters affected by attack
+     * @param attackerName name of character performing fireball attack
+     */
     public void showFireballAttack(int damage, List<String> monsterNames, String attackerName){
         System.out.print(attackerName+ " attacks ");
         for (int i =0; i < monsterNames.size()-1; i++){
@@ -1024,10 +1033,22 @@ public class ConsoleUIManager {
         System.out.println("Hits and deals "+damage+" magical damage.");
     }
 
+    /**
+     * shows action of cleric when healing another character
+     * @param clericName name of cleric healing
+     * @param heal amount of hit points recovered
+     * @param target character being healed
+     */
     public void showClericHeal(String clericName, int heal, String target){
         System.out.println(clericName + " uses Prayer of Healing. Heals "+heal+" hit points to "+target);
     }
 
+    /**
+     * shows action of cleric when healing all the characters in the party
+     * @param paladinName name of cleric healing
+     * @param heal amount of hit points recovered
+     * @param targets characters being healed
+     */
     public void showPaladinHeal(String paladinName, int heal, String[] targets){
         System.out.print(paladinName+ " uses prayer of Mass Healing. Heals "+heal+" hit points to ");
         for (int i =0; i <targets.length-1; i++){
@@ -1036,7 +1057,10 @@ public class ConsoleUIManager {
         System.out.println("and "+targets[targets.length-1]);
     }
 
-    // FIXME THIS SHOULD RETURN THE RIGHT VALUES
+    /**
+     * shows the actions performed by each character during the preparation stage of an adventure
+     * @param party list of characters in the Party
+     */
     public void showPrepStageActions(List<Character> party){
 
         for (Character c: party){
@@ -1059,7 +1083,10 @@ public class ConsoleUIManager {
         }
     }
 
-    // FIXME THIS SHOULD RETURN THE RIGHT VALUES
+    /**
+     * shows the actions performed by each character during the preparation stag eof an adventure
+     * @param party list of characters in the Party
+     */
     public void showShortRestActions(List<Character> party){
         for(Character c: party){
             if(Objects.equals(c.getCharClass(), "Adventurer") || Objects.equals(c.getCharClass(), "Warrior")){
