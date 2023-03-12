@@ -17,7 +17,9 @@ public class CharacterApiDAO implements CharacterDAO {
     private ApiHelper apiHelper;
     private final String url = "https://balandrau.salle.url.edu/dpoo/S1-Project_ICE10/characters";
 
-
+    /**
+     * default constructor
+     */
     public CharacterApiDAO(){
         try {
             apiHelper = new ApiHelper();
@@ -25,7 +27,11 @@ public class CharacterApiDAO implements CharacterDAO {
             e.printStackTrace();
         }
     }
-
+    /**
+     * adds a character in the database
+     * @param character character object
+     * @return if character is added
+     */
     @Override
     public int add(Character character) {
         try {
@@ -43,7 +49,10 @@ public class CharacterApiDAO implements CharacterDAO {
         }
         return 0;
     }
-
+    /**
+     * deletes a character by its name
+     * @param str character name
+     */
     @Override
     public void delete(String str) {
         try {
@@ -110,7 +119,11 @@ public class CharacterApiDAO implements CharacterDAO {
         }
         return null;
     }
-
+    /**
+     * get a list of characters that are positioned in the value of the parties_inx array
+     * @param parties_inx an array containing the indexes of the characters
+     * @return the character objects referring to their indexes
+     */
     @Override
     public List<Character> getCharactersByIndexes(int[] parties_inx) {
         try {
@@ -163,6 +176,18 @@ public class CharacterApiDAO implements CharacterDAO {
         return Integer.MIN_VALUE;
     }
 
+    /**
+     * method to assign a class to a given character by its attributes. converts instance of object depending on its character class attribute
+     * @param name character's name
+     * @param player player whi created the character
+     * @param xp character's xp
+     * @param body character's body
+     * @param mind character's mind
+     * @param spirit character's spirit
+     * @param charClass character's class
+     * @param shield wizard's shield
+     * @return new instance of character depending on its class
+     */
     @Override
     public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass, int shield) {
         switch(charClass){

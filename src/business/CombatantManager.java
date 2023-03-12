@@ -77,9 +77,9 @@ public class CombatantManager {
     }
 
     /**
-     * names getter
+     * gets names of a list of combatants
      * @param combatants list of combatants
-     * @return a list of names
+     * @return a list of names of the given combatants
      */
     public List<String> getNames(List<Combatant> combatants) {
         monsterManager.setIsLocal(isLocal());

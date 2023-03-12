@@ -235,6 +235,18 @@ public class CharacterJsonDAO implements CharacterDAO {
         return Integer.MIN_VALUE;
     }
 
+    /**
+     * method to assign a class to a given character by its attributes. converts instance of object depending on its character class attribute
+     * @param name character's name
+     * @param player player whi created the character
+     * @param xp character's xp
+     * @param body character's body
+     * @param mind character's mind
+     * @param spirit character's spirit
+     * @param charClass character's class
+     * @param shield wizard's shield
+     * @return new instance of character depending on its class
+     */
     public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass, int shield){
         switch(charClass){
             case "Adventurer":

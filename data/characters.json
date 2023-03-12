@@ -5,15 +5,17 @@
     "xp": 229,
     "body": 2,
     "mind": 0,
-    "spirit": 0
+    "spirit": 0,
+    "charClass": "Cleric"
   },
   {
     "name": "Caranthir",
     "player": "SonsOfFeanor",
     "xp": 306,
     "body": 2,
-    "mind": 0,
-    "spirit": 1
+    "mind": 1,
+    "spirit": 1,
+    "charClass": "Wizard"
   },
   {
     "name": "Curufin",
@@ -21,7 +23,8 @@
     "xp": 286,
     "body": 1,
     "mind": 1,
-    "spirit": 1
+    "spirit": 1,
+    "charClass": "Adventurer"
   },
   {
     "name": "Elendil",
@@ -29,7 +32,8 @@
     "xp": 307,
     "body": 1,
     "mind": 3,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Paladin"
   },
   {
     "name": "Fëanor",
@@ -37,7 +41,8 @@
     "xp": 407,
     "body": 1,
     "mind": 1,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Finrod Felagund",
@@ -45,7 +50,8 @@
     "xp": 144,
     "body": 3,
     "mind": 3,
-    "spirit": 0
+    "spirit": 0,
+    "charClass": "Adventurer"
   },
   {
     "name": "Galadriel",
@@ -53,7 +59,8 @@
     "xp": 118,
     "body": -1,
     "mind": 2,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Hellboy",
@@ -61,7 +68,8 @@
     "xp": 167,
     "body": 0,
     "mind": -1,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Jinx",
@@ -69,7 +77,8 @@
     "xp": 50,
     "body": -1,
     "mind": 2,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Luke Skywalker",
@@ -77,7 +86,8 @@
     "xp": 329,
     "body": -1,
     "mind": 0,
-    "spirit": -1
+    "spirit": -1,
+    "charClass": "Adventurer"
   },
   {
     "name": "Maedhros",
@@ -85,7 +95,8 @@
     "xp": 348,
     "body": 0,
     "mind": -1,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Niënor Níniel",
@@ -93,7 +104,8 @@
     "xp": 148,
     "body": 3,
     "mind": 0,
-    "spirit": 1
+    "spirit": 1,
+    "charClass": "Adventurer"
   },
   {
     "name": "Percival Fredrickstein von Musel Klossowski de Rolo III",
@@ -101,7 +113,8 @@
     "xp": 499,
     "body": 1,
     "mind": -1,
-    "spirit": 1
+    "spirit": 1,
+    "charClass": "Adventurer"
   },
   {
     "name": "Túrin Turambar",
@@ -109,7 +122,8 @@
     "xp": 292,
     "body": 1,
     "mind": 2,
-    "spirit": 2
+    "spirit": 2,
+    "charClass": "Adventurer"
   },
   {
     "name": "Vi",
@@ -117,24 +131,8 @@
     "xp": 844,
     "body": 0,
     "mind": 2,
-    "spirit": -1
-  },
-  {
-    "name": "Finrol",
-    "player": "eru",
-    "xp": 200,
-    "body": 1,
-    "mind": 1,
-    "spirit": 2,
-    "charClass": "adventurer"
-  },
-  {
-    "name": "A",
-    "player": "a",
-    "xp": 500,
-    "body": 1,
-    "mind": 3,
-    "spirit": 0,
-    "charClass": "paladin"
+    "spirit": -1,
+    "charClass": "Adventurer"
   }
+
 ]

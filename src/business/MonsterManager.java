@@ -16,8 +16,7 @@ import java.util.Objects;
  */
 
 
-// TODO: if boss, damage affects to all characters,
-//   if they receive damage of the same type as theirs, resultant damage is halved
+
 
 public class MonsterManager {
 
@@ -126,7 +125,7 @@ public class MonsterManager {
     }
 
     /**
-     * get all the monsters challenges from the data set
+     * get all the monsters challenge statistics from the data set
      * @return a list of all the monsters challenges
      */
     public List<String> getAllMonstersChallenges() {
@@ -162,6 +161,11 @@ public class MonsterManager {
         return init_values;
     }
 
+    /**
+     * gets the type of damage a given monster does, either magical, physical or psychical
+     * @param name monster's name
+     * @return damage type of given monster
+     */
     public String getDamageTypeOfMonster(String name){
         List<Monster> monsters;
         if (isLocal()) {
