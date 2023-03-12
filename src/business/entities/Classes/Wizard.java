@@ -2,6 +2,7 @@ package business.entities.Classes;
 
 import business.entities.Character;
 import business.entities.Party;
+import persistence.CharacterDAO;
 import persistence.JSON.CharacterJsonDAO;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class Wizard extends Character {
     // SHIELD WTF !!!
     // FIXME: add shield points and make shield work during combat
     @Override
-    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
+    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterDAO dao) {
         List<Party> newParty = new ArrayList<>();
         int mind;
         int level ;
@@ -78,7 +79,7 @@ public class Wizard extends Character {
     }
 
     @Override
-    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterJsonDAO dao) {
+    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterDAO dao) {
         return parties;
     }
 }

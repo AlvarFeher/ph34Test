@@ -2,6 +2,7 @@ package business.entities.Classes;
 
 import business.entities.Character;
 import business.entities.Party;
+import persistence.CharacterDAO;
 import persistence.JSON.CharacterJsonDAO;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class Cleric extends Character {
 
     // clerics add 1 mind to everyone but themselves
     @Override
-    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
+    public List<Party> preparationStageAction(List<Party> party, String charName, CharacterDAO dao) {
         List<Party> newParty = new ArrayList<>();
         for(Party c: party){
             if(!Objects.equals(c.getCharacter(dao).getName(), charName)){
@@ -60,7 +61,7 @@ public class Cleric extends Character {
         return newParty;
     }
 
-    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterJsonDAO dao){
+    public List<Party> shortRestAction(List<Party> parties, String charName, CharacterDAO dao){
         List<Party> newParty = new ArrayList<>();
         for(Party c: parties){
             int rand =(int)Math.floor(Math.random() * (10) + 1); // for now this is like adventurer/warrior

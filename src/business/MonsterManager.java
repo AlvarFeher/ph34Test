@@ -152,13 +152,24 @@ public class MonsterManager {
     public List<Integer> getInitValueByNames(List<String> monsterNamesInEncounterUnfiltered) {
         List<Integer> init_values = new ArrayList<>();
         for (String partyName : monsterNamesInEncounterUnfiltered) {
-            init_values.add((monsterJsonDAO.getInitValueByName(partyName)) + (int) (Math.random() * 12) + 1);
+            if (isLocal()) {
+                init_values.add((monsterJsonDAO.getInitValueByName(partyName)) + (int) (Math.random() * 12) + 1);
+            }
+            else {
+                init_values.add((monsterApiDAO.getInitValueByName(partyName)) + (int) (Math.random() * 12) + 1);
+            }
         }
         return init_values;
     }
 
     public String getDamageTypeOfMonster(String name){
-        List<Monster> monsters = monsterJsonDAO.getAll();
+        List<Monster> monsters;
+        if (isLocal()) {
+            monsters = monsterJsonDAO.getAll();
+        }
+        else {
+            monsters = monsterApiDAO.getAll();
+        }
         for(Monster m: monsters){
             if(Objects.equals(m.getName(), name)){
                 return m.getDamageType();

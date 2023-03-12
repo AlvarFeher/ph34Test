@@ -2,9 +2,6 @@ package presentation;
 
 
 import business.entities.Character;
-import business.entities.Classes.Wizard;
-import business.entities.Monster;
-import business.entities.Party;
 
 import java.util.List;
 import java.util.Objects;
@@ -833,7 +830,7 @@ public class ConsoleUIManager {
      * @param max_hit_points the total hit points of all the characters in the encounter
      */
     public void showRoundCombatStage(int i, String[] partyNames, List<Integer> hit_points, List<Integer> max_hit_points) {
-        System.out.println("Round "+ ++i +":\nParty:");
+        System.out.println("Round "+  ++i +":\nParty:");
         for (int j=0;j<partyNames.length;j++) {
             System.out.print("\t- "+ partyNames[j] + " \t" + hit_points.get(j) + " / "+max_hit_points.get(j)+" hit points\n");
         }

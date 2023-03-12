@@ -83,23 +83,6 @@ public interface AdventureDAO {
     int getDamageDiceByName(String currentAdventure, int encounter_pos, String name);
 
     /**
-     * get the character class in an adventure
-     * @param currentAdventure name of the adventure
-     * @param name the name of the character
-     * @return the character class in an adventure
-     */
-    String getCharacterClassByName(String currentAdventure, String name);
-
-    /**
-     * get the character body in an adventure
-     * @param currentAdventure name of the adventure
-     * @param name name of the character
-     * @return the character body in an adventure
-     */
-    int getCharactersBodyByName(String currentAdventure, String name);
-
-
-    /**
      * checks if all monsters in an encounter of an adventure are dead
      * @param currentAdventure name of the adventure
      * @param encounter_pos the encounter position
@@ -137,15 +120,6 @@ public interface AdventureDAO {
     int getAdventuresSize();
 
     /**
-     * checks if a specific monster (by position) in an encounter of an adventure is dead
-     * @param currentAdventure name of the adventure
-     * @param encounterPos the encounter position
-     * @param monster_pos the monster position
-     * @return true if the monster is dead
-     */
-    boolean isMonsterDeadByPosition(String currentAdventure, int encounterPos, int monster_pos);
-
-    /**
      * checks if a specific character ( by name ) in an adventure is unconscious
      * @param currentAdventure name of the adventure
      * @param s the party name
@@ -170,7 +144,4 @@ public interface AdventureDAO {
      */
     boolean isPartyUnconsciousByPosition(String currentAdventure, int party_pos);
 
-    int getCharactersSpiritByName(String currentAdventure, String name);
-
-    int getCharactersXpByName(String currentAdventure, String name);
 }

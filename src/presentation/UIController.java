@@ -16,8 +16,8 @@ import java.util.*;
 public class UIController {
     private final ConsoleUIManager consoleUI;
     private final CharacterManager characterManager;
-    private MonsterManager monsterManager;
-    private CombatantManager combatantManager;
+    private final MonsterManager monsterManager;
+    private final CombatantManager combatantManager;
     private final AdventureManager adventureManager;
 
     private boolean isLocal = true; // temporary variable for storage management
@@ -256,7 +256,7 @@ public class UIController {
             int characterCount = characterManager.getCharacterCount();
             int characterNum = consoleUI.chooseNumOfCharactersAdventure(currentAdventure, characterCount);
 
-            adventureManager.resetParty(currentAdventure);
+            //adventureManager.resetParty(currentAdventure);
 
             int[] parties_inx = new int[characterNum];
             Arrays.fill(parties_inx, Integer.MIN_VALUE);
@@ -283,8 +283,6 @@ public class UIController {
 
             adventureManager.updateParty(currentAdventure, parties_inx);
 
-            // FIXME: check down from here *********************
-
             for (int i = 0; i < adventureManager.getNumOfEncountersByName(currentAdventure); i++) {
                 int xp_gain = adventureManager.getXpGainedInEncounter(currentAdventure, i);
                 consoleUI.showEncounterMsg(i);
@@ -306,7 +304,7 @@ public class UIController {
                 //combat stage
                 combatStage(i, parties_inx, currentAdventure, max_hit_points, combatants);
 
-                if (adventureManager.isTPU(currentAdventure, i)) {
+                if (adventureManager.isTPU(currentAdventure)) {
                     consoleUI.showTPU();
                     run();
                 }
@@ -342,6 +340,7 @@ public class UIController {
         int round = 0;
 
         while(!adventureManager.isCombatEnd(currentAdventure, encounter_pos)) {
+
             consoleUI.showRoundCombatStage(round, characterManager.getPartyNames(parties_inx), adventureManager.getHitPointsByindex(currentAdventure), max_hit_points);
 
             for (Combatant c : combatants) {
@@ -370,14 +369,9 @@ public class UIController {
                         // we are considering both healing and damage value as the same
                         actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos), adventureManager.checkPartyHalfHp(currentAdventure));
 
-                        //System.out.println("**********TEST**********+");
-                       // adventureManager.testPrint(currentAdventure, encounter_pos);
-
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure, c.getName());
-                        if(p == null){
-                            //System.out.println("\n***************************  p is null \n");
-                        }
+
                         if (p != null) {
 
                         Character ch = p.getCharacter(new CharacterJsonDAO());
@@ -401,7 +395,6 @@ public class UIController {
                         else if (ch instanceof Cleric && adventureManager.checkHealingNeeded(currentAdventure, max_hit_points)) {
                            String target =  adventureManager.applyHealOnCharacter(actionValue, currentAdventure, max_hit_points);
                             consoleUI.showClericHeal(ch.getName(), actionValue,target);
-                            //System.out.println("cleric heals");
                         }
 
                         // heal all party members
@@ -415,7 +408,6 @@ public class UIController {
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);
                             consoleUI.showAttackAction(null,ch.getCharClass(),false,1, c.getName(), monster, rollDiced, actionValue * rollDiced, adventureManager.getDamageTypeOfAttack(c.getName(), currentAdventure));
                         }
-                       // adventureManager.testPrint(currentAdventure, encounter_pos);
                     }
                     }
                 }

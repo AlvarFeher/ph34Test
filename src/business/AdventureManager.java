@@ -4,13 +4,18 @@ import business.entities.*;
 import business.entities.Character;
 import business.entities.Classes.*;
 import persistence.API.AdventureApiDAO;
+import persistence.API.CharacterApiDAO;
+import persistence.API.MonsterApiDAO;
 import persistence.AdventureDAO;
 import persistence.AdventureDAO;
+import persistence.CharacterDAO;
 import persistence.JSON.AdventureJsonDAO;
 import persistence.JSON.CharacterJsonDAO;
 import persistence.JSON.MonstersJsonDAO;
+import persistence.MonsterDAO;
 
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,8 +28,10 @@ public class AdventureManager {
     private final CharacterManager characterManager;
     private final AdventureDAO adventureJsonDAO;
     private final AdventureDAO adventureApiDAO;
-    private final CharacterJsonDAO characterJsonDao;
-    private final MonstersJsonDAO monstersJsonDAO;
+    private final CharacterDAO characterJsonDao;
+    private final CharacterDAO characterApiDAO;
+    private final MonsterDAO monstersJsonDAO;
+    private final MonsterDAO monstersApiDAO;
     private boolean local;
 
     public boolean isLocal() {
@@ -46,6 +53,8 @@ public class AdventureManager {
         characterJsonDao = new CharacterJsonDAO();
         monstersJsonDAO = new MonstersJsonDAO();
         adventureApiDAO = new AdventureApiDAO();
+        monstersApiDAO = new MonsterApiDAO();
+        characterApiDAO = new CharacterApiDAO();
     }
 
     /**
@@ -136,7 +145,13 @@ public class AdventureManager {
     }
 
     public Party getPartyMemberByName(String currentAdventure, String partyName){
-        List<Party> parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        List<Party> parties;
+        if (isLocal()) {
+            parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        }
+        else {
+            parties = adventureApiDAO.getPartyByName(currentAdventure);
+        }
         for(Party p: parties){
             if(Objects.equals(p.getCharacter(characterJsonDao).getName(), partyName)){
                 return p;
@@ -295,7 +310,10 @@ public class AdventureManager {
      * @return how many encounters there is in this adventure
      */
     public int getNumOfEncountersByName(String currentAdventure) {
-        return adventureJsonDAO.getNumOfEncountersByName(currentAdventure);
+        if (isLocal()) {
+            return adventureJsonDAO.getNumOfEncountersByName(currentAdventure);
+        }
+        return adventureApiDAO.getNumOfEncountersByName(currentAdventure);
     }
 
     /**
@@ -305,7 +323,10 @@ public class AdventureManager {
      * @return all monsters in a specific encounter of a specific adventure
      */
     public List<String> getMonsterNamesInEncounterUnfiltered(int i, String currentAdventure) {
-        return adventureJsonDAO.getMonstersInEncounter(i, currentAdventure);
+        if (isLocal()) {
+            return adventureJsonDAO.getMonstersInEncounter(i, currentAdventure);
+        }
+        return adventureApiDAO.getMonstersInEncounter(i, currentAdventure);
     }
 
     /**
@@ -314,7 +335,13 @@ public class AdventureManager {
      * @param parties_inx an array that contains in each position the position of a character
      */
     public void updateParty(String currentAdventure, int[] parties_inx) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Character> characterList = characterManager.getCharactersByIndexes(parties_inx);
 
         List<Party> parties = new ArrayList<>();
@@ -325,7 +352,12 @@ public class AdventureManager {
             parties.add(new Party(characterJsonDao.assignClass(c.getName(),c.getPlayer(),c.getXp(),c.getBody(),c.getMind(),c.getSpirit(),c.getCharClass()), hit_points.get(i),characterJsonDao));
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }
+        else {
+            adventureApiDAO.update(new_adventure);
+        }
     }
 
     /**
@@ -334,33 +366,51 @@ public class AdventureManager {
      * @param parties_inx array of character's positions
      */
     public void updatePartyInPrepStage(String currentAdventure, int[] parties_inx) {
-        // in this phase we only work with adventurer class therefore, the update is +1 in spirit
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Party> parties = new ArrayList<>();
         for (int i=0;i< parties_inx.length;i++) {
             Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
             parties = character.preparationStageAction(adventure.getParties(),character.getName(),characterJsonDao);
             Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-            adventureJsonDAO.update(new_adventure);
+            if (isLocal()) {
+                adventureJsonDAO.update(new_adventure);
+            }
+            else {
+                adventureApiDAO.update(new_adventure);
+            }
         }
     }
 
     public void updatePartyInShortRestStage(String currentAdventure, int[] parties_inx){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
+
         List<Party> parties = new ArrayList<>();
 
         for (int i = 0; i < parties_inx.length; i++) {
             Character character = adventure.getParties().get(i).getCharacter(characterJsonDao);
             parties = character.shortRestAction(adventure.getParties(),character.getName(),characterJsonDao);
             Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-            adventureJsonDAO.update(new_adventure);
+            if (isLocal()) {
+                adventureJsonDAO.update(new_adventure);
+            }
+            else {
+                adventureApiDAO.update(new_adventure);
+            }
         }
     }
 
-    // update party with the gained xp of the adventure
-    public void updatePartyXpGaining(){
-
-    }
 
     /**
      * checks if a combatant is a monster
@@ -370,7 +420,10 @@ public class AdventureManager {
      * @return true if combatant is a monster
      */
     public boolean isCombatantMonster(String currentAdventure, int encounter_pos, String name) {
-        return adventureJsonDAO.isNameMonster(currentAdventure, encounter_pos, name);
+        if (isLocal()) {
+            return adventureJsonDAO.isNameMonster(currentAdventure, encounter_pos, name);
+        }
+        return adventureApiDAO.isNameMonster(currentAdventure, encounter_pos, name);
     }
 
     /**
@@ -384,7 +437,13 @@ public class AdventureManager {
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters, int needHealing) {
         int damage = 0;
 
-        List<Party> parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        List<Party> parties;
+        if (isLocal()) {
+            parties = adventureJsonDAO.getPartyByName(currentAdventure);
+        }
+        else {
+            parties = adventureApiDAO.getPartyByName(currentAdventure);
+        }
         Character character;
         for(Party p: parties){
             if(Objects.equals(p.getCharacter(characterJsonDao).getName(), name)){
@@ -406,9 +465,18 @@ public class AdventureManager {
 
     // FIXME: add maximum hit points attribute to Party class
     public int checkPartyHalfHp(String currentAdventure){
-        for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
-            if(c.getHitPoint() < c.getHitPoint()/2){
-                return 1;
+        if (isLocal()) {
+            for (Party c : adventureJsonDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < c.getHitPoint() / 2) {
+                    return 1;
+                }
+            }
+        }
+        else {
+            for (Party c : adventureApiDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < c.getHitPoint() / 2) {
+                    return 1;
+                }
             }
         }
         return 0;
@@ -421,11 +489,21 @@ public class AdventureManager {
     // FIXME: add maximum hit points attribute to Party class
     public boolean checkHealingNeeded(String currentAdventure, List<Integer> maxHitPoints){
         int i=0;
-        for(Party c: adventureJsonDAO.getPartyByName(currentAdventure)){
-            if(c.getHitPoint() < maxHitPoints.get(i)/2){
-                return true;
+        if (isLocal()) {
+            for (Party c : adventureJsonDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < maxHitPoints.get(i) / 2) {
+                    return true;
+                }
+                i++;
             }
-            i++;
+        }
+        else {
+            for (Party c : adventureApiDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < maxHitPoints.get(i) / 2) {
+                    return true;
+                }
+                i++;
+            }
         }
         return false;
     }
@@ -438,8 +516,13 @@ public class AdventureManager {
      * @return the attack action value of the monster
      */
     public int  takeAttackActionMonster(String currentAdventure, int encounter_pos, String name) {
-        int max = adventureJsonDAO.getDamageDiceByName(currentAdventure, encounter_pos, name);
-        // aqui meter el damage dependiendo de que monster sea
+        int max;
+        if (isLocal()) {
+            max = adventureJsonDAO.getDamageDiceByName(currentAdventure, encounter_pos, name);
+        }
+        else {
+            max = adventureApiDAO.getDamageDiceByName(currentAdventure, encounter_pos, name);
+        }
         return (int)Math.floor(Math.random() * (max) + 1);
     }
 
@@ -460,28 +543,53 @@ public class AdventureManager {
      * @return true if all the monsters in an encounter are dead or if all the party is unconscious, false otherwise
      */
     public boolean isCombatEnd(String currentAdventure, int encounter_pos) {
-        return adventureJsonDAO.areMonstersAllDead(currentAdventure, encounter_pos) || adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
+        if (isLocal()) {
+            return adventureJsonDAO.areMonstersAllDead(currentAdventure, encounter_pos) || adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
+        }
+        return adventureApiDAO.areMonstersAllDead(currentAdventure, encounter_pos) || adventureApiDAO.arePartyAllUnconscious(currentAdventure);
     }
 
     /**
      * checks if the adventure reached a TPU case, which means all characters in the party are unconscious
      * @param currentAdventure name of the adventure
-     * @param encounter_pos encounter position
      * @return true if the adventure reached a TPU case
      */
-    public boolean isTPU(String currentAdventure, int encounter_pos) {
-        return adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
+    public boolean isTPU(String currentAdventure) {
+        if (isLocal()) {
+            return adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
+        }else {
+            return adventureApiDAO.arePartyAllUnconscious(currentAdventure);
+        }
     }
 
     // FIXME
     // attack from Boss Monster
     public String applyDamageOnAllParty(int damage, String currentAdventure, String damageType){
-        if (adventureJsonDAO.arePartyAllUnconscious(currentAdventure)) {
-            return null;
+        if (isLocal()) {
+            if (adventureJsonDAO.arePartyAllUnconscious(currentAdventure)) {
+                return null;
+            }
         }
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        else {
+            if (adventureApiDAO.arePartyAllUnconscious(currentAdventure)) {
+                return null;
+            }
+        }
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         Adventure newAdventure;
-        List<Party> characters = adventureJsonDAO.getPartyByName(currentAdventure);
+        List<Party> characters;
+        if (isLocal()) {
+            characters = adventureJsonDAO.getPartyByName(currentAdventure);
+        }
+        else{
+            characters = adventureApiDAO.getPartyByName(currentAdventure);
+        }
         List<Party> parties = new ArrayList<>();
         int i=0;
         boolean unconscious = false;
@@ -561,7 +669,12 @@ public class AdventureManager {
         }
 
         newAdventure =  new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-        adventureJsonDAO.update(newAdventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(newAdventure);
+        }
+        else{
+            adventureApiDAO.update(newAdventure);
+        }
         for(Party p : parties){
             if(p.getHitPoint() > 0){ // character is conscious
                 return p.getCharacter(characterJsonDao).getName();
@@ -580,20 +693,46 @@ public class AdventureManager {
      * @return the name of the character being attacked
      */
     public String applyDamageOnRandomConsciousParty(int damage, String current_adventure, int[] parties_inx, String damageType) {
-        if (adventureJsonDAO.arePartyAllUnconscious(current_adventure)) {
-            return null;
+        if (isLocal()) {
+            if (adventureJsonDAO.arePartyAllUnconscious(current_adventure)) {
+                return null;
+            }
         }
-        Adventure adventure = adventureJsonDAO.getAdventureByName(current_adventure);
+        else {
+            if (adventureApiDAO.arePartyAllUnconscious(current_adventure)) {
+                return null;
+            }
+        }
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(current_adventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(current_adventure);
+        }
         Adventure new_adventure;
         int party_pos;
 
-        List<Party> characters = adventureJsonDAO.getPartyByName(current_adventure);
+        List<Party> characters;
+        if (isLocal()) {
+            characters = adventureJsonDAO.getPartyByName(current_adventure);
+        }
+        else {
+            characters = adventureApiDAO.getPartyByName(current_adventure);
+        }
         List<Party> parties = new ArrayList<>();
 
-        do {
-            party_pos = (int) Math.floor(Math.random() * (parties_inx.length) + 1) - 1;
-        }while (adventureJsonDAO.isPartyUnconsciousByPosition(current_adventure, party_pos));
 
+        if (isLocal()) {
+            do {
+                party_pos = (int) Math.floor(Math.random() * (parties_inx.length) + 1) - 1;
+            } while (adventureJsonDAO.isPartyUnconsciousByPosition(current_adventure, party_pos));
+        }
+        else {
+            do {
+                party_pos = (int) Math.floor(Math.random() * (parties_inx.length) + 1) - 1;
+            } while (adventureApiDAO.isPartyUnconsciousByPosition(current_adventure, party_pos));
+        }
         boolean unconscious = false;
         for (int i=0;i < parties_inx.length;i++) {
             if (i == party_pos) {
@@ -674,7 +813,13 @@ public class AdventureManager {
             }
         }
         new_adventure =  new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }
+        else{
+            adventureApiDAO.update(new_adventure);
+        }
+
         if (unconscious) {
             return characters.get(party_pos).getCharacter(characterJsonDao).getName() + " falls unconscious";
         }
@@ -684,7 +829,13 @@ public class AdventureManager {
     }
 
     public boolean isMonsterBoss(String name){
-        List<Monster> monsters = monstersJsonDAO.getAll();
+        List<Monster> monsters;
+        if (isLocal()) {
+            monsters = monstersJsonDAO.getAll();
+        }
+        else {
+            monsters = monstersApiDAO.getAll();
+        }
         for(Monster m : monsters){
             if(Objects.equals(m.getName(), name)){
                 return Objects.equals(m.getChallenge(), "Boss");
@@ -700,7 +851,13 @@ public class AdventureManager {
      */
     public List<Integer> getHitPointsByindex(String current_adventure) {
         List<Integer> hp = new ArrayList<>();
-        List<Party> parties = adventureJsonDAO.getPartyByName(current_adventure);
+        List<Party> parties;
+        if (isLocal()) {
+            parties = adventureJsonDAO.getPartyByName(current_adventure);
+        }
+        else {
+            parties = adventureApiDAO.getPartyByName(current_adventure);
+        }
         for (Party party : parties) {
             hp.add(party.getHitPoint());
         }
@@ -726,13 +883,17 @@ public class AdventureManager {
      * @return the name of the monster being attacked
      */
     public String applyDamageOnRandomMonsterInEncounter(int damage, String currentAdventure, int encounterPos, String attackType) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
         String s = "";
         int monster_pos = (int)Math.floor(Math.random() * (monsters.size()));
-
-        int[] aliveMonsters;
 
         boolean dead = false;
         for (int i=0;i<monsters.size();i++) {
@@ -785,7 +946,12 @@ public class AdventureManager {
             }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), encounter, adventure.getParties());
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }
+        else {
+            adventureApiDAO.update(new_adventure);
+        }
         if (dead) {
             return s + " dies";
         }
@@ -795,7 +961,13 @@ public class AdventureManager {
     }
 
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos, String attackType){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Monster> monsters = adventure.getEncounters().get(encounterPos);
         List<Monster> new_monsters = new ArrayList<>();
         for(Monster m: monsters){
@@ -827,12 +999,23 @@ public class AdventureManager {
         }
 
         Adventure newAdventure = new Adventure(adventure.getName(),adventure.getNum_encounters(),encounters,adventure.getParties());
-        adventureJsonDAO.update(newAdventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(newAdventure);
+        }
+        else {
+            adventureApiDAO.update(newAdventure);
+        }
     }
 
     // should only heal a single character
     public String applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
         int flag =0;
@@ -849,12 +1032,22 @@ public class AdventureManager {
             }
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }else {
+            adventureApiDAO.update(new_adventure);
+        }
         return target;
     }
 
     public void applyHealOnParty(int heal, String currentAdventure){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Party> parties = adventure.getParties();
         List<Party> new_parties = new ArrayList<>();
         int i;
@@ -864,7 +1057,12 @@ public class AdventureManager {
             new_parties.add(newParty);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), new_parties );
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }
+        else {
+            adventureApiDAO.update(new_adventure);
+        }
     }
 
     /**
@@ -874,7 +1072,10 @@ public class AdventureManager {
      * @return the xp gained in an encounter
      */
     public int getXpGainedInEncounter(String adventure_name, int encounter_pos) {
-        return adventureJsonDAO.getXpGainedInEncounter(adventure_name, encounter_pos);
+        if (isLocal()) {
+            return adventureJsonDAO.getXpGainedInEncounter(adventure_name, encounter_pos);
+        }
+        return adventureApiDAO.getXpGainedInEncounter(adventure_name, encounter_pos);
     }
 
     /**
@@ -912,7 +1113,10 @@ public class AdventureManager {
      * @return the adventure name
      */
     public String getAdventureNameByIndex(int i) {
-        return adventureJsonDAO.getNameByIndex(i);
+        if (isLocal()) {
+            return adventureJsonDAO.getNameByIndex(i);
+        }
+        return adventureApiDAO.getNameByIndex(i);
     }
 
     /**
@@ -922,7 +1126,10 @@ public class AdventureManager {
      * @return true if a character is alive
      */
     public boolean isPartyAlive(String currentAdventure, String s) {
-        return !adventureJsonDAO.isPartyUnconsciousByName(currentAdventure, s);
+        if (isLocal()) {
+            return !adventureJsonDAO.isPartyUnconsciousByName(currentAdventure, s);
+        }
+        return !adventureApiDAO.isPartyUnconsciousByName(currentAdventure, s);
     }
 
     /**
@@ -933,7 +1140,10 @@ public class AdventureManager {
      * @return true if monster is alive
      */
     public boolean isMonsterAlive(String currentAdventure, int encounter_pos, String s) {
-        return adventureJsonDAO.isMonsterAlive(currentAdventure, encounter_pos, s);
+        if (isLocal()) {
+            return adventureJsonDAO.isMonsterAlive(currentAdventure, encounter_pos, s);
+        }
+        return adventureApiDAO.isMonsterAlive(currentAdventure, encounter_pos, s);
     }
 
     /**
@@ -944,7 +1154,13 @@ public class AdventureManager {
      * @return a list where each position shows if the level of the character has increased or not
      */
     public List<Integer> gainXp(String adventure_name, int xp_gained, int[] parties_inx) {
-        Adventure adventure = adventureJsonDAO.getAdventureByName(adventure_name);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure= adventureJsonDAO.getAdventureByName(adventure_name);
+        }
+        else {
+            adventure= adventureApiDAO.getAdventureByName(adventure_name);
+        }
         List<Party> parties = new ArrayList<>();
         List<Integer> list= new ArrayList<>();
         for (int i=0;i< parties_inx.length;i++) {
@@ -966,7 +1182,11 @@ public class AdventureManager {
             parties.add(new_party);
         }
         Adventure new_adventure = new Adventure(adventure.getName(), adventure.getNum_encounters(), adventure.getEncounters(), parties);
-        adventureJsonDAO.update(new_adventure);
+        if (isLocal()) {
+            adventureJsonDAO.update(new_adventure);
+        }else {
+            adventureApiDAO.update(new_adventure);
+        }
         return list;
     }
 
@@ -1001,13 +1221,11 @@ public class AdventureManager {
     }
 
     /**
-     * reeturns current number of monsters in an encounter of an adventure
+     * get current number of monsters in an encounter of an adventure
      * @param currentAdventure current adventure
      * @param encounterIndex encounter index in the adventure
      * @return amount of alive monsters, that number being the amount of existing monsters
      */
-
-
     public int currentAliveMonsters(List<Combatant> combatants,String currentAdventure, int encounterIndex){
         int count =0;
         for(Combatant c : combatants){
@@ -1020,7 +1238,13 @@ public class AdventureManager {
     }
 
     public String getDamageTypeOfAttack(String attackerName, String currentAdventure){
-        Adventure adventure= adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure adventure;
+        if (isLocal()) {
+            adventure= adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            adventure= adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Party> parties = adventure.getParties();
         for(Party p: parties){
             if(Objects.equals(p.getCharacter(characterJsonDao).getName(), attackerName)){
@@ -1036,21 +1260,14 @@ public class AdventureManager {
     }
 
 
-    public void testPrint(String currentAdventure, int encounterIndex){
-        Adventure adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
-        List<Party> parties = adventure.getParties();
-        List<List<Monster>> encounters = adventure.getEncounters();
-
-        for(Party p: parties){
-            System.out.println("name: "+p.getCharacter(characterJsonDao).getName()+"  hp: "+p.getHitPoint());
-        }
-        for(Monster m: encounters.get(encounterIndex) ){
-            System.out.println("name: "+m.getName()+"  hp: "+m.getHitPoints());
-        }
-    }
-
     public List<Character> getCharactersFromParty(String currentAdventure){
-        Adventure a = adventureJsonDAO.getAdventureByName(currentAdventure);
+        Adventure a;
+        if (isLocal()) {
+            a = adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        else {
+            a = adventureApiDAO.getAdventureByName(currentAdventure);
+        }
         List<Character> finalList = new ArrayList<>();
         for (Party p: a.getParties()){
             finalList.add(p.getCharacter(characterJsonDao));
@@ -1060,10 +1277,18 @@ public class AdventureManager {
 
 
     public Adventure getCopyAdventure(String currentAdventure) {
-        return adventureJsonDAO.getAdventureByName(currentAdventure);
+        if (isLocal()) {
+            return adventureJsonDAO.getAdventureByName(currentAdventure);
+        }
+        return adventureApiDAO.getAdventureByName(currentAdventure);
     }
 
     public void resetAdventure(Adventure adventure_copy) {
-        adventureJsonDAO.update(adventure_copy);
+        if (isLocal()) {
+            adventureJsonDAO.update(adventure_copy);
+        }
+        else {
+            adventureApiDAO.update(adventure_copy);
+        }
     }
 }

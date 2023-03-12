@@ -1,6 +1,7 @@
 package persistence.API;
 
 import business.entities.Character;
+import business.entities.Classes.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import persistence.CharacterDAO;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CharacterApiDAO implements CharacterDAO {
 
@@ -27,8 +29,15 @@ public class CharacterApiDAO implements CharacterDAO {
     @Override
     public int add(Character character) {
         try {
+            List<Character> characters = getAll();
+            for (Character value : characters) {
+                if (Objects.equals(value.getName(), character.getName())) {
+                    return 0;
+                }
+            }
             String body = new Gson().toJson(character);
             apiHelper.postToUrl(url, body);
+            return 1;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,6 +122,7 @@ public class CharacterApiDAO implements CharacterDAO {
             for (int partiesInx : parties_inx) {
                 characters.add(characterList.get(partiesInx));
             }
+            return characters;
         }catch (IOException e) {
             e.printStackTrace();
         }
@@ -151,5 +161,24 @@ public class CharacterApiDAO implements CharacterDAO {
             e.printStackTrace();
         }
         return Integer.MIN_VALUE;
+    }
+
+    @Override
+    public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass) {
+        switch(charClass){
+            case "Adventurer":
+                return  new Adventurer(name, player, xp, body, mind, spirit, charClass);
+            case "Warrior":
+                return  new Warrior( name, player, xp, body, mind, spirit, charClass);
+            case "Champion":
+                return  new Champion(name, player, xp, body, mind, spirit, charClass);
+            case "Cleric":
+                return  new Cleric(name, player, xp, body, mind, spirit, charClass);
+            case "Paladin":
+                return  new Paladin(name, player, xp, body, mind, spirit, charClass);
+            case "Wizard":
+                return  new Wizard(name, player, xp, body, mind, spirit, charClass,0);
+        }
+        return null;
     }
 }

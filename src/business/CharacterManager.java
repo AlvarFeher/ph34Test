@@ -270,7 +270,10 @@ public class CharacterManager {
      * @return all the characters
      */
     public List<Character> getAll(){
-        return characterJsonDAO.getAll();
+        if (isLocal()) {
+            return characterJsonDAO.getAll();
+        }
+        return characterApiDAO.getAll();
     }
 
     /**
@@ -278,7 +281,10 @@ public class CharacterManager {
      * @return all the characters names
      */
     public List<String> getAllCharacterNames() {
-        return characterJsonDAO.getCharactersNames();
+        if (isLocal()) {
+            return characterJsonDAO.getCharactersNames();
+        }
+        return characterApiDAO.getCharactersNames();
     }
 
     /**
@@ -308,7 +314,12 @@ public class CharacterManager {
     public List<Integer> getInitValueByNames(String[] partyNames) {
         List<Integer> init_values = new ArrayList<>();
         for (String partyName : partyNames) {
-            init_values.add((characterJsonDAO.getCharactersSpiritByName(partyName)) + (int) (Math.random() * 12) + 1);
+            if (isLocal()) {
+                init_values.add((characterJsonDAO.getCharactersSpiritByName(partyName)) + (int) (Math.random() * 12) + 1);
+            }
+            else {
+                init_values.add((characterApiDAO.getCharactersSpiritByName(partyName)) + (int) (Math.random() * 12) + 1);
+            }
         }
         return init_values;
     }
@@ -319,7 +330,10 @@ public class CharacterManager {
      * @return a list of characters
      */
     public List<Character> getCharactersByIndexes(int[] parties_inx) {
-        return characterJsonDAO.getCharactersByIndexes(parties_inx);
+        if (isLocal()) {
+            return characterJsonDAO.getCharactersByIndexes(parties_inx);
+        }
+        return characterApiDAO.getCharactersByIndexes(parties_inx);
     }
 
     public String getInitialClass(String currentClass){
