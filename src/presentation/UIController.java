@@ -17,8 +17,8 @@ public class UIController {
     private final ConsoleUIManager consoleUI;
     private final CharacterManager characterManager;
     private final MonsterManager monsterManager;
-    private final CombatantManager combatantManager;
     private final AdventureManager adventureManager;
+    private CombatantManager combatantManager;
 
     private boolean isLocal = true; // temporary variable for storage management
     /**
@@ -79,8 +79,10 @@ public class UIController {
      * controls the main menu options
      */
     private void run() {
-        characterManager.setLocal(isLocal);
         adventureManager.setLocal(isLocal);
+        combatantManager.setLocal(isLocal);
+        characterManager.setLocal(isLocal);
+
 
         int characterCount = characterManager.getCharacterCount();
 
@@ -243,6 +245,7 @@ public class UIController {
      * controlling the adventure execution process
      */
     private void startAdventure() {
+
         int adventure_size = adventureManager.getSize();
         consoleUI.startAdventureMsg(adventure_size);
         if (adventure_size > 0) {
@@ -255,8 +258,7 @@ public class UIController {
             Adventure adventure_copy = adventureManager.getCopyAdventure(currentAdventure);
             int characterCount = characterManager.getCharacterCount();
             int characterNum = consoleUI.chooseNumOfCharactersAdventure(currentAdventure, characterCount);
-
-            //adventureManager.resetParty(currentAdventure);
+;
 
             int[] parties_inx = new int[characterNum];
             Arrays.fill(parties_inx, Integer.MIN_VALUE);
@@ -402,7 +404,7 @@ public class UIController {
                             adventureManager.applyHealOnParty(actionValue, currentAdventure);
                             String[] partyNames = characterManager.getPartyNames(parties_inx);
                             consoleUI.showPaladinHeal(ch.getName(),actionValue,partyNames);
-                            //System.out.println("paladin heals");
+
 
                         } else {  // attacks to a random monster
                             String monster = adventureManager.applyDamageOnRandomMonsterInEncounter(actionValue * rollDiced, currentAdventure, encounter_pos, attackType);

@@ -293,16 +293,25 @@ public class ConsoleUIManager {
 
     public String askInitialClass(){
         String init_class;
-        init_class = getStringValue("-> Enter the character’s initial class [Adventurer, Cleric, Wizard]:");
+        boolean b;
+        do{
+            init_class = getStringValue("-> Enter the character’s initial class [Adventurer, Cleric, Wizard]:");
 
-        switch (init_class) {
-            case "Adventurer" : return "Adventurer";
-            case "Cleric" : return "Cleric";
-            case "Wizard" : return "Wizard";
-            default:
+            b = !(Objects.equals(init_class, "Adventurer")) && !Objects.equals(init_class, "Cleric") && !Objects.equals(init_class, "Wizard");
+            if (Objects.equals(init_class, "Adventurer")) {
+                return "Adventurer";
+            }
+            if (Objects.equals(init_class, "Cleric")) {
+                return "Cleric";
+            }
+            if (Objects.equals(init_class, "Wizard")) {
+                return "Wizard";
+            }
+            if (b) {
                 System.out.println(MessageView.NOT_VALID_OPTION_MENU);
-                askInitialClass();
-        }
+            }
+        } while (b);
+
         return null;
     }
 

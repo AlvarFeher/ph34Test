@@ -60,5 +60,5 @@ public interface CharacterDAO {
      */
     int getCharactersSpiritByName(String partyName);
 
-    Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass);
+    Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass, int shield);
 }

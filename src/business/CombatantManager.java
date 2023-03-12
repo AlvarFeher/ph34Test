@@ -16,6 +16,16 @@ public class CombatantManager {
 
     private final CharacterManager characterManager;
     private final MonsterManager monsterManager;
+    private boolean local;
+
+
+    public boolean isLocal() {
+        return local;
+    }
+
+    public void setLocal(boolean local) {
+        this.local = local;
+    }
 
 
     /**
@@ -33,6 +43,8 @@ public class CombatantManager {
      * @return a sorted list of combatants
      */
     public List<Combatant> rollInitiative(String[] partyNames, List<String> monsterNamesInEncounterUnfiltered) {
+        monsterManager.setIsLocal(isLocal());
+        characterManager.setLocal(isLocal());
         List<Integer> party_initiative_value = characterManager.getInitValueByNames(partyNames);
         List<Integer> monster_initiative_value = monsterManager.getInitValueByNames(monsterNamesInEncounterUnfiltered);
         List<Combatant> combatents = new ArrayList<>();
@@ -55,7 +67,9 @@ public class CombatantManager {
      * @return a list of initial value
      */
     public List<Integer> getInitValues(List<Combatant> combatants) {
-       List<Integer> list = new ArrayList<>();
+        monsterManager.setIsLocal(isLocal());
+        characterManager.setLocal(isLocal());
+        List<Integer> list = new ArrayList<>();
         for (Combatant combatant : combatants) {
             list.add(combatant.getInitValue());
         }
@@ -68,6 +82,8 @@ public class CombatantManager {
      * @return a list of names
      */
     public List<String> getNames(List<Combatant> combatants) {
+        monsterManager.setIsLocal(isLocal());
+        characterManager.setLocal(isLocal());
         List<String> list = new ArrayList<>();
         for (Combatant combatant : combatants) {
             list.add(combatant.getName());

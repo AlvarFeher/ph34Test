@@ -336,6 +336,7 @@ public class AdventureManager {
      */
     public void updateParty(String currentAdventure, int[] parties_inx) {
         Adventure adventure;
+        characterManager.setLocal(isLocal());
         if (isLocal()) {
             adventure = adventureJsonDAO.getAdventureByName(currentAdventure);
         }
@@ -1235,7 +1236,6 @@ public class AdventureManager {
                 count++;
             }
         }
-       // System.out.println("current alive monsters: "+count +"\n");
         return count;
     }
 
