@@ -43,6 +43,7 @@ public class Character  {
         this.charClass = charClass;
     }
 
+
     public int doAction(){return 0;}
 
 

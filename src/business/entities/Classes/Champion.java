@@ -19,23 +19,41 @@ public class Champion extends Character {
      * @param body      character's body statistics
      * @param mind      character's mind statistics
      * @param spirit    character's spitit statistics
-     * @param charClass
+     * @param charClass character's class
      */
     public Champion(String name, String player, int xp, int body, int mind, int spirit, String charClass) {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
+    /**
+     * This function returns the damage value of the Attack action of a Champion.
+     * It works as the Improved Sword Slash
+     * @return damage by Champion's attack: d10 + body
+     */
     @Override
     public int doAction() {
         return (int)Math.floor(Math.random() * (10) + 1) + getBody();
     } // improved sword slash
 
+    /**
+     * Champion's don't use this overridden function from Character.
+     * @param param1 unused
+     * @param param2 unused
+     * @return returns 0
+     */
     @Override
     public int doAction(int param1, int param2) {
         return 0;
     }
 
-    // champions add 1 spirit to everyone but themselves
+    /**
+     * Function overridden from Character class. Updates party with effects of the Preparation Stage action of a Champion.
+     * It works as Motivational Speech. Adds 1 spirit to everyone but itself
+     * @param party List of characters from the Party
+     * @param charName Name of the character
+     * @param dao CharacterDao used to assign character class
+     * @return Updated party affected by the preparation stage action of a Champion
+     */
     @Override
     public List<Party> preparationStageAction(List<Party> party, String charName, CharacterDAO dao) {
         List<Party> newParty = new ArrayList<>();
@@ -48,12 +66,19 @@ public class Champion extends Character {
         return newParty;
     }
 
-    // FIXME: the champion heals to 100% hp, we need maxHitPoints as attribute
+    /**
+     * Function overridden from Character class. Updates party with effects of the Short Rest Stage action of a Champion.
+     * It works as Improved Bandage Time.
+     * @param parties List of characters from the Party
+     * @param charName Name of the character
+     * @param dao CharacterDao used to assign character class
+     * @return Updated party affected by the short rest stage action of an adventurer
+     */
     @Override
     public List<Party> shortRestAction(List<Party> parties, String charName, CharacterDAO dao){
         List<Party> newParty = new ArrayList<>();
         for(Party c: parties){
-            int rand =(int)Math.floor(Math.random() * (8) + 1); // for now this is like adventurer/warrior
+            int rand =(int)Math.floor(Math.random() * (8) + 1);
             if(Objects.equals(c.getCharacter(dao).getName(), charName)){
                 Character ca = new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass());
                 newParty.add(new Party(ca,c.getHitPoint()+rand,dao,0));

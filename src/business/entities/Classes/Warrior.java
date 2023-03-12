@@ -18,24 +18,44 @@ public class Warrior extends Character {
      * @param xp        character's xp
      * @param body      character's body statistics
      * @param mind      character's mind statistics
-     * @param spirit    character's spitit statistics
-     * @param charClass
+     * @param spirit    character's spirit statistics
+     * @param charClass character's class
      */
     public Warrior(String name, String player, int xp, int body, int mind, int spirit, String charClass) {
         super(name, player, xp, body, mind, spirit, charClass);
     }
 
+    /**
+     * This function returns the damage value of the Attack action of a Warrior.
+     * It works as the Improved Sword Slash
+     * @return damage by Warrior's attack: d10 + body
+     */
+
     @Override
     public int doAction() {
-        return (int)Math.floor(Math.random() * (6) + 1) + getBody();
+        return (int)Math.floor(Math.random() * (10) + 1) + getBody();
     } // improved sword slash
 
+    /**
+     * Warriors don't use this overridden function from Character.
+     * @param param1 unused
+     * @param param2 unused
+     * @return returns 0
+     */
     @Override
     public int doAction(int param1, int param2) {
         return 0;
     }
 
-    // warriors only add 1 spirit to themselves
+
+    /**
+     * Function overridden from Character class. Updates party with effects of the Preparation Stage action of a Warrior.
+     * It works as Self-Motivated. Adds 1 spirit to itself
+     * @param party List of characters from the Party
+     * @param charName Name of the character
+     * @param dao CharacterDao used to assign character class
+     * @return Updated party affected by the preparation stage action of an adventurer
+     */
     @Override
     public List<Party> preparationStageAction(List<Party> party, String charName, CharacterDAO dao) {
         List<Party> newParty = new ArrayList<>();
@@ -47,6 +67,16 @@ public class Warrior extends Character {
         }
         return newParty;
     }
+
+
+    /**
+     * Function overridden from Character class. Updates party with effects of the Short Rest Stage action of a Warrior.
+     * It works as Bandage Time. Adds 1 spirit to itself
+     * @param parties List of characters from the Party
+     * @param charName Name of the character
+     * @param dao CharacterDao used to assign character class
+     * @return Updated party affected by the short rest stage action of a Warrior
+     */
 
     @Override
     public List<Party> shortRestAction(List<Party> parties, String charName, CharacterDAO dao){
