@@ -12,7 +12,8 @@ import java.util.List;
  * character entity
  */
 public class Character  {
- //TODO: Make this abstract
+
+    //TODO: Make this abstract
     private String name;
     private String player;
     private int xp;
@@ -113,5 +114,8 @@ public class Character  {
     }
 
 
+    public int getTestPrepStage() { return 0; }
+
+    public int getShield(){return 0; }
 }
 

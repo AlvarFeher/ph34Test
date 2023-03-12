@@ -28,7 +28,7 @@ public class Wizard extends Character {
     }
 
     public int getShield() {
-        return shield;
+        return this.shield;
     }
 
     public void setShield(int shield) {
@@ -56,8 +56,6 @@ public class Wizard extends Character {
         return (int)Math.floor(Math.random() * (4) + 1) + mind;
     }
 
-    // SHIELD WTF !!!
-    // FIXME: add shield points and make shield work during combat
     @Override
     public List<Party> preparationStageAction(List<Party> party, String charName, CharacterJsonDAO dao) {
         List<Party> newParty = new ArrayList<>();
@@ -67,8 +65,9 @@ public class Wizard extends Character {
             if(Objects.equals(c.getCharacter(dao).getName(), charName)){
                 mind = c.getCharacter(dao).getMind();
                 level = (c.getCharacter(dao).getXp()/100) +1;
-                Character ca = new Wizard(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass(),((int)Math.floor(Math.random() * (6) + 1) + mind)*level);
-                newParty.add(new Party(ca,c.getHitPoint(),dao));
+                setShield(((int)Math.floor(Math.random() * (6) + 1) + mind)*level);
+                Character ca = new Wizard(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass(),this.shield);
+                newParty.add(new Party(ca,c.getHitPoint(),dao,shield));
             }else
                 newParty.add(c);
 

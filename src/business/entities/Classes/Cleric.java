@@ -53,7 +53,7 @@ public class Cleric extends Character {
         List<Party> newParty = new ArrayList<>();
         for(Party c: party){
             if(!Objects.equals(c.getCharacter(dao).getName(), charName)){
-                newParty.add(new Party(new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind()+1,c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass()),c.getHitPoint(),dao));
+                newParty.add(new Party(new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind()+1,c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass()),c.getHitPoint(),dao,0));
             }else
                 newParty.add(c);
         }
@@ -66,7 +66,7 @@ public class Cleric extends Character {
             int rand =(int)Math.floor(Math.random() * (10) + 1); // for now this is like adventurer/warrior
             if(Objects.equals(c.getCharacter(dao).getName(), charName)){
                 Character ca = new Character(c.getCharacter(dao).getName(),c.getCharacter(dao).getPlayer(),c.getCharacter(dao).getXp(),c.getCharacter(dao).getBody(),c.getCharacter(dao).getMind(),c.getCharacter(dao).getSpirit(),c.getCharacter(dao).getCharClass());
-                newParty.add(new Party(ca,c.getHitPoint()+rand,dao));
+                newParty.add(new Party(ca,c.getHitPoint()+rand,dao,0));
             }else
                 newParty.add(c);
         }

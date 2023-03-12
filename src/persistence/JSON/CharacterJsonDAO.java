@@ -235,7 +235,7 @@ public class CharacterJsonDAO implements CharacterDAO {
         return Integer.MIN_VALUE;
     }
 
-    public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass){
+    public Character assignClass(String name, String player, int xp, int body, int mind, int spirit, String charClass, int shield){
         switch(charClass){
             case "Adventurer":
                 return  new Adventurer(name, player, xp, body, mind, spirit, charClass);
@@ -248,7 +248,7 @@ public class CharacterJsonDAO implements CharacterDAO {
             case "Paladin":
                 return  new Paladin(name, player, xp, body, mind, spirit, charClass);
             case "Wizard":
-                return  new Wizard(name, player, xp, body, mind, spirit, charClass,0);
+                return  new Wizard(name, player, xp, body, mind, spirit, charClass,shield);
         }
         return null;
     }

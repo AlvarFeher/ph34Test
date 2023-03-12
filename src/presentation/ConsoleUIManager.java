@@ -2,6 +2,7 @@ package presentation;
 
 
 import business.entities.Character;
+import business.entities.Classes.Paladin;
 import business.entities.Classes.Wizard;
 import business.entities.Monster;
 import business.entities.Party;
@@ -1028,7 +1029,6 @@ public class ConsoleUIManager {
 
     // FIXME THIS SHOULD RETURN THE RIGHT VALUES
     public void showPrepStageActions(List<Character> party){
-        int paladinValue = (int)Math.floor(Math.random() * (3) + 1);
 
         for (Character c: party){
             if(Objects.equals(c.getCharClass(), "Adventurer") || Objects.equals(c.getCharClass(), "Warrior")){
@@ -1041,11 +1041,11 @@ public class ConsoleUIManager {
                 System.out.println(c.getName()+" uses Prayer Of Good Luck. Everyone's Mind increases in +1");
             }
             if(Objects.equals(c.getCharClass(), "Paladin")){
-                System.out.println(c.getName()+" uses Blessing Of Good Luck. Everyone's Mind increases in "+paladinValue);
+                System.out.println(c.getName()+" uses Blessing Of Good Luck. Everyone's Mind increases in "+  c.getTestPrepStage());
             }
             if(Objects.equals(c.getCharClass(), "Wizard")){
                 int wizardShield = 24; // (Wizard) c.getShield()
-                System.out.println(c.getName()+" uses Mage Shield. Shield recharges to "+ wizardShield);
+                System.out.println(c.getName()+" uses Mage Shield. Shield recharges to "+ c.getShield());
             }
         }
     }

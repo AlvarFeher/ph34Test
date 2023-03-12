@@ -16,8 +16,8 @@ public class Party {
      * @param character character object
      * @param hitPoint hit point
      */
-    public Party(Character character, int hitPoint, CharacterJsonDAO dao) {
-        this.character = dao.assignClass(character.getName(), character.getPlayer(), character.getXp(),character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass());
+    public Party(Character character, int hitPoint, CharacterJsonDAO dao, int shield) {
+        this.character = dao.assignClass(character.getName(), character.getPlayer(), character.getXp(),character.getBody(), character.getMind(), character.getSpirit(), character.getCharClass(), shield);
         this.hitPoint = hitPoint;
     }
 
@@ -26,7 +26,7 @@ public class Party {
      * @return character
      */
     public Character getCharacter(CharacterJsonDAO dao) {
-        return dao.assignClass(character.getName(),character.getPlayer(),character.getXp(),character.getBody(),character.getMind(),character.getSpirit(),character.getCharClass());
+        return dao.assignClass(character.getName(),character.getPlayer(),character.getXp(),character.getBody(),character.getMind(),character.getSpirit(),character.getCharClass(),0);
     }
 
     /**
