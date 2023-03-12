@@ -10,10 +10,10 @@ import persistence.JSON.CharacterJsonDAO;
 public class Party {
     private Character character;
     private int hitPoint;
-    private int maxHitPoint; // initial hp value
+
 
     /**
-     *
+     * constructor
      * @param character character object
      * @param hitPoint hit point
      */

@@ -44,19 +44,40 @@ public class Character  {
     }
 
 
+    /** Version with no parameters for Adventurer, Warrior and Champion.
+     * Function used by character classes that extend Character. Action used during combat for either healing or damaging.
+     * @return returns 0 by default
+     */
     public int doAction(){return 0;}
 
 
     /**
-     *
+     * Version with parameters for Cleric, Paladin and Wizard
      * @param param1 used as a flag to check if healing is needed during combat
      * @param param2 used as a flag to check how many monsters are alive during combat
-     * @return
+     * @return returns 0 by default
      */
     public  int doAction(int param1, int param2){return 0;}
 
+
+    /**
+     * Function to be extended by character classes.
+     * Generates new party affected by the actions during preparation stage.
+     * @param parties current Party
+     * @param charName name of character performing such action
+     * @param dao characterDao used to assign class to characters
+     * @return returns null by default
+     */
     public List<Party> preparationStageAction(List<Party> parties, String charName, CharacterDAO dao){return null; }
 
+    /**
+     * Function to be extended by character classes.
+     * Generates new party affected by the actions during short rest stage.
+     * @param parties Current Party
+     * @param charName Name of character performing such action
+     * @param dao CharacterDao used to assign class to characters
+     * @return Returns null by default
+     */
     public List<Party> shortRestAction(List<Party> parties, String charName, CharacterDAO dao){return null; }
 
     /**
@@ -115,9 +136,16 @@ public class Character  {
         return charClass;
     }
 
-
+    /**
+     * get value for paladin print
+     * @return
+     */
     public int getTestPrepStage() { return 0; }
 
+    /**
+     * gets shield from wizard
+     * @return
+     */
     public int getShield(){return 0; }
 }
 

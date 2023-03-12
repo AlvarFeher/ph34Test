@@ -14,7 +14,7 @@ public class Adventure {
     private List<Party> parties;
 
     /**
-     * a constructor without parties
+     * A constructor without parties
      * @param name name of the adventure
      * @param num_encounters number of encounters
      * @param encounters a list of another list of monsters

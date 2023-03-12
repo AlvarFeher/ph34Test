@@ -89,6 +89,10 @@ public class Monster{
         return Integer.parseInt(damageDice.split("d")[1]);
     }
 
+    /**
+     * generates Monster Json Object
+     * @return Monster Json as string
+     */
     @Override
     public String toString() {
         return "Monster{" +

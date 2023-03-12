@@ -18,14 +18,6 @@ public class Combatant {
         this.initValue = initValue;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    public void setAlive(boolean alive) {
-        isAlive = alive;
-    }
-
     /**
      * name getter
      * @return name
@@ -35,7 +27,7 @@ public class Combatant {
     }
 
     /**
-     * initial value getter
+     * initiative value getter
      * @return initial value
      */
     public int getInitValue() {
