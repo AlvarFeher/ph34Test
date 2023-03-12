@@ -5,7 +5,7 @@ import persistence.CharacterDAO;
 import persistence.JSON.CharacterJsonDAO;
 
 /**
- * party entity, a member of a party
+ * Party entity. A member of a party, not the party as a set of characters.
  */
 public class Party {
     private Character character;

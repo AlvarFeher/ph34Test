@@ -22,19 +22,21 @@ public class CharacterManager {
     private final CharacterDAO characterApiDAO;
     private boolean local;
 
-
+    /**
+     * checks if the storage method is local or in cloud
+     * @return boolean depending on the storage method, local or in cloud
+     */
     public boolean isLocal() {
         return local;
     }
 
+    /**
+     * sets storage method to either local or in cloud
+     * @param local boolean depending on the storage method, local or in cloud
+     */
     public void setLocal(boolean local) {
         this.local = local;
     }
-
-    //todo: new character classes (adventurer, cleric, wizard)
-    // classes evolve with level
-    // each class and level has its own features
-
 
     /**
      * constructor
@@ -82,6 +84,12 @@ public class CharacterManager {
         return xp[level];
     }
 
+    /**
+     * gets a characters actual class depending on its current level and initial class
+     * @param level current level of a character
+     * @param initialClass initial class of a character
+     * @return real character class
+     */
     public String levelToClass(int level, String initialClass) {
         String finalClass = "";
         if(Objects.equals(initialClass, "Adventurer") || Objects.equals(initialClass, "Warrior") || Objects.equals(initialClass, "Champion") ){
@@ -120,13 +128,14 @@ public class CharacterManager {
     }
 
     /**
-     * adds a character to the data set
+     * adds a character to the data set taking into account its class and statistics.
      * @param name character's name
      * @param player_name player name
      * @param level character's level
      * @param body character's body statistics
      * @param mind character's mind statistics
      * @param spirit character's spirit statistics
+     * @param initialClass character's initial class
      * @return if the character is created
      */
     public int createCharacter(String name, String player_name, int level, int body, int mind, int spirit, String initialClass) {
@@ -253,7 +262,7 @@ public class CharacterManager {
     }
 
     /**
-     * gets the number of characters in the data set
+     * gets the number of characters in the data set depending on its locality
      * @return the number of characters in the data set
      */
     public int getCharacterCount(){
@@ -266,7 +275,7 @@ public class CharacterManager {
     }
 
     /**
-     * get all the characters
+     * get all the characters from the Json storage
      * @return all the characters
      */
     public List<Character> getAll(){

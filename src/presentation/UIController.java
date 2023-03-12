@@ -369,7 +369,7 @@ public class UIController {
                     if (adventureManager.isPartyAlive(currentAdventure, c.getName())) {
 
                         // we are considering both healing and damage value as the same
-                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos), adventureManager.checkPartyHalfHp(currentAdventure));
+                        actionValue = adventureManager.takeAttackActionCharacter(currentAdventure, c.getName(), adventureManager.currentAliveMonsters(combatants, currentAdventure, encounter_pos), adventureManager.checkPartyHalfHp(currentAdventure,max_hit_points));
 
                         // find character by name
                         Party p = adventureManager.getPartyMemberByName(currentAdventure, c.getName());

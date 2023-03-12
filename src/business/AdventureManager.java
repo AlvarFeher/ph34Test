@@ -34,10 +34,18 @@ public class AdventureManager {
     private final MonsterDAO monstersApiDAO;
     private boolean local;
 
+    /**
+     * check if data storage is local or in cloud
+     * @return boolean weather storage is local or in cloud
+     */
     public boolean isLocal() {
         return local;
     }
 
+    /**
+     * Sets storage as either local or in cloud
+     * @param local boolean defining storage as local or in cloud
+     */
     public void setLocal(boolean local) {
         this.local = local;
     }
@@ -144,6 +152,12 @@ public class AdventureManager {
         return count;
     }
 
+    /**
+     * gets a Party member by giving its name and the current adventure being played. It works for either local or cloud storage
+     * @param currentAdventure adventure being played
+     * @param partyName name of the party member to search for
+     * @return if the party member is found it returns the Party object of it. If not returns null.
+     */
     public Party getPartyMemberByName(String currentAdventure, String partyName){
         List<Party> parties;
         if (isLocal()) {
@@ -362,7 +376,7 @@ public class AdventureManager {
     }
 
     /**
-     * updates the adventure in preparation stage
+     * updates the adventure's party during preparation stage. All characters perform their actions depending on their classes and update the party.
      * @param currentAdventure name of the adventure
      * @param parties_inx array of character's positions
      */
@@ -389,7 +403,11 @@ public class AdventureManager {
     }
 
 
-
+    /**
+     * Updates the party during the short rest stage of an adventure. All characters perform their actions depending on their classes.
+     * @param currentAdventure name of current adventure being played
+     * @param parties_inx array of character's positions
+     */
     public void updatePartyInShortRestStage(String currentAdventure, int[] parties_inx){
         Adventure adventure;
         if (isLocal()) {
@@ -430,13 +448,14 @@ public class AdventureManager {
     }
 
     /**
-     * gets the attack action value of a character
+     * Characters perform their attack actions depending on their classes.
      * @param currentAdventure name of the adventure
      * @param name name of the character
+     * @param needHealing equals 1 if healing is needed, 0 if not
+     * @param currentAliveMonsters amount of monsters alive in adventure at that moment
      * @return the attack action value of the character
      */
 
-    // IMPORTANT !! needHealing is 1 if healing is needed, 0 if not
     public int takeAttackActionCharacter(String currentAdventure, String name, int currentAliveMonsters, int needHealing) {
         int damage = 0;
 
@@ -463,39 +482,15 @@ public class AdventureManager {
     /**
      * check if any member from the party has its hp lower than the initial half
      * @param currentAdventure current adventure
-     * @return boolean
+     * @return boolean showing if anyone needs healing
      */
 
-    // FIXME: add maximum hit points attribute to Party class
-    public int checkPartyHalfHp(String currentAdventure){
-        if (isLocal()) {
-            for (Party c : adventureJsonDAO.getPartyByName(currentAdventure)) {
-                if (c.getHitPoint() < c.getHitPoint() / 2) {
-                    return 1;
-                }
-            }
-        }
-        else {
-            for (Party c : adventureApiDAO.getPartyByName(currentAdventure)) {
-                if (c.getHitPoint() < c.getHitPoint() / 2) {
-                    return 1;
-                }
-            }
-        }
-        return 0;
-    }
-
-    /**
-     * check if anyone in the party needs healing
-     * @return
-     */
-    // FIXME: add maximum hit points attribute to Party class
-    public boolean checkHealingNeeded(String currentAdventure, List<Integer> maxHitPoints){
+    public int checkPartyHalfHp(String currentAdventure, List<Integer> maxHitPoints){
         int i=0;
         if (isLocal()) {
             for (Party c : adventureJsonDAO.getPartyByName(currentAdventure)) {
                 if (c.getHitPoint() < maxHitPoints.get(i) / 2) {
-                    return true;
+                    return 1;
                 }
                 i++;
             }
@@ -503,6 +498,32 @@ public class AdventureManager {
         else {
             for (Party c : adventureApiDAO.getPartyByName(currentAdventure)) {
                 if (c.getHitPoint() < maxHitPoints.get(i) / 2) {
+                    return 1;
+                }
+                i++;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * check if anyone in the party needs healing. Checks if anyone has less hit points than its initial maximum
+     * @return boolean shpwing if healing is needed
+     */
+
+    public boolean checkHealingNeeded(String currentAdventure, List<Integer> maxHitPoints){
+        int i=0;
+        if (isLocal()) {
+            for (Party c : adventureJsonDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < maxHitPoints.get(i)) {
+                    return true;
+                }
+                i++;
+            }
+        }
+        else {
+            for (Party c : adventureApiDAO.getPartyByName(currentAdventure)) {
+                if (c.getHitPoint() < maxHitPoints.get(i)) {
                     return true;
                 }
                 i++;
@@ -512,7 +533,7 @@ public class AdventureManager {
     }
 
     /**
-     * gets the attack action value of a monster
+     * gets the attack action value of a monster depending on its stats and dice.
      * @param currentAdventure name of the adventure
      * @param encounter_pos encounter position
      * @param name name of monster
@@ -566,6 +587,13 @@ public class AdventureManager {
     }
 
 
+    /**
+     * Applies the damage produced by a Boss monster to all members of a party. Including passive abilities and damage reductions.
+     * @param damage damage made by monster
+     * @param currentAdventure current adventure being played
+     * @param damageType type of damage from monster
+     * @return returns string stating the consciousness state of the party members
+     */
     // attack from Boss Monster
     public String applyDamageOnAllParty(int damage, String currentAdventure, String damageType){
         if (isLocal()) {
@@ -689,7 +717,8 @@ public class AdventureManager {
     }
 
     /**
-     * the monster whose turn to attack applies its damage dice on a non-unconscious party
+     * the monster whose turn to attack applies its damage dice on a non-unconscious party.
+     * Including passive abilities and damage reductions depending on classes.
      * @param damage damage value
      * @param current_adventure name of the adventure
      * @param parties_inx the parties index
@@ -831,6 +860,11 @@ public class AdventureManager {
         }
     }
 
+    /**
+     * Checks if a given monster is a Boss or not
+     * @param name name of the monster to check
+     * @return boolean indicating if monster is boss or not
+     */
     public boolean isMonsterBoss(String name){
         List<Monster> monsters;
         if (isLocal()) {
@@ -879,7 +913,8 @@ public class AdventureManager {
 
 
     /**
-     * the character whose turn to attack applies its damage dice on a monster
+     * The character whose turn to attack applies its damage on a monster. It updates the adventure taking into account the damage reductions of a Boss monster.
+     * It is used for all attacks that damage a single monster in an encounter.
      * @param damage damage value
      * @param currentAdventure name of the adventure
      * @param encounterPos encounter position
@@ -963,6 +998,13 @@ public class AdventureManager {
         }
     }
 
+    /**
+     * Applies damage by updating adventure. Used for Fireball attack, since it affects the entire encounter.
+     * @param damage damage produced by fireball attack to each monster
+     * @param currentAdventure adventure being played
+     * @param encounterPos encounter being played in adventure
+     * @param attackType attack type.  magical, physical or psychical
+     */
     public void applyDamageOnAllMonsters(int damage, String currentAdventure, int encounterPos, String attackType){
         Adventure adventure;
         if (isLocal()) {
@@ -1010,7 +1052,14 @@ public class AdventureManager {
         }
     }
 
-    // should only heal a single character
+
+    /**
+     * applies healing on a single character by updating the adventure. Adds healing amount by another character.
+     * @param heal hit points to be regenerated
+     * @param currentAdventure current adventure being played
+     * @param maxHitPoints list of maximum hit points of all characters in the party
+     * @return rteurns the character who received the healing
+     */
     public String applyHealOnCharacter( int heal, String currentAdventure, List<Integer> maxHitPoints){
         Adventure adventure;
         if (isLocal()) {
@@ -1043,6 +1092,11 @@ public class AdventureManager {
         return target;
     }
 
+    /**
+     * applies healing on all the party by updating the adventure with all its characters healed a certain amount of hit points.
+     * @param heal hit points to be regenerated
+     * @param currentAdventure current adventure being played
+     */
     public void applyHealOnParty(int heal, String currentAdventure){
         Adventure adventure;
         if (isLocal()) {
@@ -1239,6 +1293,12 @@ public class AdventureManager {
         return count;
     }
 
+    /**
+     * gets the damage type of an attack performed by a character, since it can be magical, physical, or psychical
+     * @param attackerName name of character performing the attack action
+     * @param currentAdventure adventure being played
+     * @return typology of the attack
+     */
     public String getDamageTypeOfAttack(String attackerName, String currentAdventure){
         Adventure adventure;
         if (isLocal()) {
@@ -1262,6 +1322,11 @@ public class AdventureManager {
     }
 
 
+    /**
+     * gets list of characters from a party
+     * @param currentAdventure adventure being played
+     * @return list of characters in the party of the given adventure
+     */
     public List<Character> getCharactersFromParty(String currentAdventure){
         Adventure a;
         if (isLocal()) {
@@ -1277,6 +1342,11 @@ public class AdventureManager {
         return finalList;
     }
 
+    /**
+     * gets a copy of a given adventure
+     * @param currentAdventure adventure to get
+     * @return copy of given adventure
+     */
 
     public Adventure getCopyAdventure(String currentAdventure) {
         if (isLocal()) {
@@ -1285,6 +1355,10 @@ public class AdventureManager {
         return adventureApiDAO.getAdventureByName(currentAdventure);
     }
 
+    /**
+     * resets adventure with original encounters and empty party
+     * @param adventure_copy copy of adventure to be updated
+     */
     public void resetAdventure(Adventure adventure_copy) {
         if (isLocal()) {
             adventureJsonDAO.update(adventure_copy);
