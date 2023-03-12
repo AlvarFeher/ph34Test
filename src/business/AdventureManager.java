@@ -473,7 +473,7 @@ public class AdventureManager {
         return adventureJsonDAO.arePartyAllUnconscious(currentAdventure);
     }
 
-    // FIXME
+
     // attack from Boss Monster
     public String applyDamageOnAllParty(int damage, String currentAdventure, String damageType){
         if (adventureJsonDAO.arePartyAllUnconscious(currentAdventure)) {

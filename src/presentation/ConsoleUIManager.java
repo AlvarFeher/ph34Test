@@ -874,7 +874,15 @@ public class ConsoleUIManager {
                 System.out.println(s2 + "\n");
             }
             else {
-                System.out.println(s + " attacks " + s2 + ".");
+                if(isMonsterBoss){
+                    System.out.print(s+ "(Boss) attacks ");
+                    for (int i = 0; i < partyNames.size()-1; i++) {
+                        System.out.print(partyNames.get(i).getName()+" ,");
+                    }
+                    System.out.println(" and "+partyNames.get(partyNames.size()-1).getName());
+                }else{
+                    System.out.println(s + " attacks " + s2 + ".");
+                }
                 switch (rollDiced) {
                     case 0 -> System.out.println("Fails and deals 0 physical damage.\n");
                     case 1 -> System.out.println("Hits and deals " + damage + " physical damage.\n");
@@ -889,7 +897,7 @@ public class ConsoleUIManager {
                 System.out.println(s + " attacks " + s2.replace(" dies" , "") + ".");
                 if (damage != Integer.MIN_VALUE) {
                     switch (rollDiced) {
-                        case 0 -> System.out.println("Fails and deals "+damageType+" damage.");
+                        case 0 -> System.out.println("Fails and deals 0 "+damageType+" damage.");
                         case 1 -> System.out.println("Hits and deals " + damage + " "+damageType+" damage.\n");
                         case 2 -> System.out.println("Critical hit and deals " + damage +" "+damageType+" damage.\n");
                     }
